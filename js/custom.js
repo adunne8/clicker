@@ -2,7 +2,7 @@
 let pizzas = 0;
 
 const pizzaButton = document.getElementById('pizza__button');
-const pizzaCount = document.getElementById('pizza__count')
+const pizzaCount = document.getElementById('pizza__count');
 
 
 function addPizza(){
