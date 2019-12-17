@@ -2,16 +2,18 @@
 let pizzas = 0;
 
 const pizzaButton = document.getElementById('pizza__button');
+const pizzaCount = document.getElementById('pizza__count')
 
 
-function generate_food_fnc(){
+function addPizza(){
     console.log("Generate Pizza"); 
     pizzas++;
     console.log(pizzas);
+    updateDisplay();
 }
 
-function update_resource_display_fnc(){
-
+function updateDisplay(){
+    pizzaCount.textContent = pizzas;
 }
 
-pizzaButton.addEventListener("click", generate_food_fnc);
+pizzaButton.addEventListener("click", addPizza);
