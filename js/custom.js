@@ -1,8 +1,15 @@
 // ****** DECLARATIONS ******
 
-// TOTALS
-let foodTotal = 0;
-let woodTotal = 0;
+// RESOURCES
+//let foodTotal = 0;
+let food = {
+    name: 'food',
+    total: 0
+}
+let wood = {
+    name: 'wood',
+    total: 0
+}
 
 
 // HTML ELEMENTS
@@ -15,37 +22,42 @@ const woodDisplay = document.getElementById('wood__count');
 
 
 // ADDING RESOURCES
-function addFood(){
-    console.log("Generate Food"); 
-    foodTotal++;
-    console.log(foodTotal);
-    updateDisplay();
+function addResource(resource){
+
+    if(resource == food){
+        console.log("Food Resource Clicked");
+        food.total++;
+    }
+    if(resource == wood){
+        console.log("Wood Resource Clicked");
+        wood.total++;
+    }
+
+    // UPDATE LOCAL STORAGE AND DISPLAYS
     setLocalStorage();
-}
-function addWood(){
-    console.log("Generate Wood"); 
-    woodTotal++;
-    console.log(woodTotal);
     updateDisplay();
-    setLocalStorage();
+
+
 }
+
+
 
 // UPDATING THE PAGE
 function updateDisplay(){
-    foodDisplay.textContent = foodTotal;
-    woodDisplay.textContent = woodTotal;
+    foodDisplay.textContent = food.total;
+    woodDisplay.textContent = wood.total;
 
 }
 
 // LOCAL STORAGE FUNCTIONS
 function setLocalStorage(){
-    localStorage.setItem("foodTotal", foodTotal);
-    localStorage.setItem("woodTotal", woodTotal);
+    localStorage.setItem("foodTotal", food.total);
+    localStorage.setItem("woodTotal", wood.total);
 }
 // NEED || IN CASE NO VALUE STORED IN LOCAL STORAGE
 function getLocalStorage(){
-    foodTotal = localStorage.getItem("foodTotal") || foodTotal;
-    woodTotal = localStorage.getItem("woodTotal") || woodTotal;
+    food.total = localStorage.getItem("foodTotal") || food.total;
+    wood.total = localStorage.getItem("woodTotal") || wood.total;
 
     updateDisplay();
 }
@@ -57,8 +69,12 @@ function clearLocalStorage(){
 
 
 // EVENT LISTENERS
-foodButton.addEventListener("click", addFood);
-woodButton.addEventListener("click", addWood);
+foodButton.addEventListener("click", function(){
+    addResource(food);
+});
+woodButton.addEventListener("click", function(){
+    addResource(wood);
+});
 
 resetButton.addEventListener("click", clearLocalStorage);
 
