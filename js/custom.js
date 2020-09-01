@@ -1,19 +1,34 @@
 // DECLARATIONS
-let pizzas = 0;
+let foodTotal = 0;
+let woodTotal = 0;
 
-const pizzaButton = document.getElementById('pizza__button');
-const pizzaCount = document.getElementById('pizza__count');
+const foodButton = document.getElementById('food__button');
+const woodButton = document.getElementById('wood__button');
 
 
-function addPizza(){
-    console.log("Generate Pizza"); 
-    pizzas++;
-    console.log(pizzas);
+const foodCount = document.getElementById('food__count');
+const woodCount = document.getElementById('wood__count');
+
+
+
+function addFood(){
+    console.log("Generate Food"); 
+    foodTotal++;
+    console.log(foodTotal);
+    updateDisplay();
+}
+function addWood(){
+    console.log("Generate Wood"); 
+    woodTotal++;
+    console.log(woodTotal);
     updateDisplay();
 }
 
 function updateDisplay(){
-    pizzaCount.textContent = pizzas;
+    foodCount.textContent = foodTotal;
+    woodCount.textContent = woodTotal;
+
 }
 
-pizzaButton.addEventListener("click", addPizza);
+foodButton.addEventListener("click", addFood);
+woodButton.addEventListener("click", addWood);
