@@ -1,7 +1,6 @@
 // ****** DECLARATIONS ******
 
 // RESOURCES
-//let foodTotal = 0;
 let food = {
     name: 'food',
     total: 0
@@ -10,15 +9,24 @@ let wood = {
     name: 'wood',
     total: 0
 }
+let stone = {
+    name: 'stone',
+    total: 0
+}
 
 
-// HTML ELEMENTS
+// ** HTML ELEMENTS ASSIGNMENT
+
+// BUTTONS
 const foodButton = document.getElementById('food__button');
 const woodButton = document.getElementById('wood__button');
+const stoneButton = document.getElementById('stone__button');
 const resetButton = document.getElementById('management__reset');
 
+// DISPLAYS
 const foodDisplay = document.getElementById('food__count');
 const woodDisplay = document.getElementById('wood__count');
+const stoneDisplay = document.getElementById('stone__count');
 
 
 // ADDING RESOURCES - FOOD, STONE, WOOD
@@ -40,6 +48,7 @@ function addResource(resource){
 function updateDisplay(){
     foodDisplay.textContent = food.total;
     woodDisplay.textContent = wood.total;
+    stoneDisplay.textContent = stone.total;
 
 }
 
@@ -47,11 +56,13 @@ function updateDisplay(){
 function setLocalStorage(){
     localStorage.setItem("foodTotal", food.total);
     localStorage.setItem("woodTotal", wood.total);
+    localStorage.setItem("stoneTotal", stone.total);
 }
 // NEED || IN CASE NO VALUE STORED IN LOCAL STORAGE
 function getLocalStorage(){
     food.total = localStorage.getItem("foodTotal") || food.total;
     wood.total = localStorage.getItem("woodTotal") || wood.total;
+    stone.total = localStorage.getItem("stoneTotal") || stone.total;
 
     updateDisplay();
 }
@@ -69,7 +80,9 @@ foodButton.addEventListener("click", function(){
 woodButton.addEventListener("click", function(){
     addResource(wood);
 });
-
+stoneButton.addEventListener("click", function(){
+    addResource(stone);
+});
 resetButton.addEventListener("click", clearLocalStorage);
 
 getLocalStorage();
