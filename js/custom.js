@@ -21,23 +21,17 @@ const foodDisplay = document.getElementById('food__count');
 const woodDisplay = document.getElementById('wood__count');
 
 
-// ADDING RESOURCES
+// ADDING RESOURCES - FOOD, STONE, WOOD
 function addResource(resource){
+    // ADDS 1 RESOURCE TO THE CLICKED RESOURCE
+    resource.total++;
 
-    if(resource == food){
-        console.log("Food Resource Clicked");
-        food.total++;
-    }
-    if(resource == wood){
-        console.log("Wood Resource Clicked");
-        wood.total++;
-    }
+    console.log(resource.name + ': ' + resource.total);
+
 
     // UPDATE LOCAL STORAGE AND DISPLAYS
     setLocalStorage();
     updateDisplay();
-
-
 }
 
 
