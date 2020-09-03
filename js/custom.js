@@ -1,18 +1,22 @@
 // ****** DECLARATIONS ******
 
 // RESOURCES
-let food = {
-    name: 'food',
-    total: 0
+class Resource {
+    constructor(name, total){
+        this.name = name;
+        this.total = total;
+    }
+
+    debugValues(){
+        console.log("Resource name: " + this.name + ", Total: " + this.total);
+    }
 }
-let wood = {
-    name: 'wood',
-    total: 0
-}
-let stone = {
-    name: 'stone',
-    total: 0
-}
+
+let food = new Resource('food', 0);
+let wood = new Resource('wood', 0);
+let stone = new Resource('stone', 0);
+
+
 
 
 // ** HTML ELEMENTS ASSIGNMENT
@@ -86,3 +90,6 @@ stoneButton.addEventListener("click", function(){
 resetButton.addEventListener("click", clearLocalStorage);
 
 getLocalStorage();
+
+
+stone.toString();
