@@ -7,9 +7,10 @@ class Resource {
         this.total = total;
     }
 
-    debugValues(){
-        console.log("Resource name: " + this.name + ", Total: " + this.total);
+    toString(){
+        console.table(this);
     }
+
 }
 
 let food = new Resource('food', 0);
@@ -90,6 +91,3 @@ stoneButton.addEventListener("click", function(){
 resetButton.addEventListener("click", clearLocalStorage);
 
 getLocalStorage();
-
-
-stone.toString();
