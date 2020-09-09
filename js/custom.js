@@ -8,7 +8,11 @@ class Resource {
     }
 
     toString(){
-        console.table(this);
+
+        for(var property in stone){
+            console.log(property + ': ' + stone[property]);
+        }
+
     }
 
 }
