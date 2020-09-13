@@ -1,28 +1,37 @@
 // ****** DECLARATIONS ******
+let food;
+let wood;
+let stone;
+let upgrades;
 
 // RESOURCES
 class Resource {
-    constructor(name, total){
+    constructor(name, total, clickValue){
         this.name = name;
         this.total = total;
+        this.clickValue = clickValue;
     }
 
     toString(){
 
-        for(var property in stone){
-            console.log(property + ': ' + stone[property]);
+        for(var property in this){
+            console.log(property + ': ' + this[property]);
         }
 
     }
 
 }
 
-let food = new Resource('food', 0);
-let wood = new Resource('wood', 0);
-let stone = new Resource('stone', 0);
+function initializeValues(){
+    //console.log('initialized');
 
+    food = new Resource('food', 0, 1);
+    wood = new Resource('wood', 0, 1);
+    stone = new Resource('stone', 0, 1);
 
+}
 
+initializeValues();
 
 // ** HTML ELEMENTS ASSIGNMENT
 
@@ -31,6 +40,13 @@ const foodButton = document.getElementById('food__button');
 const woodButton = document.getElementById('wood__button');
 const stoneButton = document.getElementById('stone__button');
 const resetButton = document.getElementById('management__reset');
+
+const upgradeButtons = document.querySelectorAll('.upgrade__button');
+upgradeButtons.forEach(function(currentButton){
+    currentButton.addEventListener('click', function(){
+        upgrade(currentButton);
+    });
+});
 
 // DISPLAYS
 const foodDisplay = document.getElementById('food__count');
@@ -41,7 +57,7 @@ const stoneDisplay = document.getElementById('stone__count');
 // ADDING RESOURCES - FOOD, STONE, WOOD
 function addResource(resource){
     // ADDS 1 RESOURCE TO THE CLICKED RESOURCE
-    resource.total++;
+    resource.total = resource.total + resource.clickValue;
 
     console.log(resource.name + ': ' + resource.total);
 
@@ -49,6 +65,17 @@ function addResource(resource){
     // UPDATE LOCAL STORAGE AND DISPLAYS
     setLocalStorage();
     updateDisplay();
+}
+
+// UPGRADES PROCESSOR
+function upgrade(upgradeButton){
+    console.log(upgradeButton.id);
+
+    if(upgradeButton.id === 'doubleclick--food'){
+        food.clickValue = food.clickValue*2;
+        console.log(food.clickValue);
+        upgradeButton.disabled = true;
+    }
 }
 
 
@@ -69,12 +96,35 @@ function setLocalStorage(){
 }
 // NEED || IN CASE NO VALUE STORED IN LOCAL STORAGE
 function getLocalStorage(){
-    food.total = localStorage.getItem("foodTotal") || food.total;
-    wood.total = localStorage.getItem("woodTotal") || wood.total;
-    stone.total = localStorage.getItem("stoneTotal") || stone.total;
+    // parseInt required to convert loaded values to integers
+    food.total = parseInt(localStorage.getItem("foodTotal") || food.total);
+    wood.total = parseInt(localStorage.getItem("woodTotal") || wood.total);
+    stone.total = parseInt(localStorage.getItem("stoneTotal") || stone.total);
+
 
     updateDisplay();
 }
+function resetValues(){
+
+
+
+        console.log('Reset Triggered, resetting values');
+        /*
+        let foodKeys = Object.keys(food);
+
+        for (var i = 0; i < foodKeys.length; i++) {
+            let val = food[foodKeys[i]];
+            console.log('reset val: ' + val);
+        }
+        */
+        //food = new Resource('food', 0, 1);
+        
+        initializeValues();
+        clearLocalStorage();
+
+
+}
+
 function clearLocalStorage(){
     localStorage.clear();
     // NEED TO RESET THE DISPLAY VALUES PROPERLY
@@ -82,7 +132,8 @@ function clearLocalStorage(){
 }
 
 
-// EVENT LISTENERS
+// ** EVENT LISTENERS
+// RESOURCES
 foodButton.addEventListener("click", function(){
     addResource(food);
 });
@@ -92,6 +143,11 @@ woodButton.addEventListener("click", function(){
 stoneButton.addEventListener("click", function(){
     addResource(stone);
 });
-resetButton.addEventListener("click", clearLocalStorage);
+
+// UPGRADES
+
+
+// SYSTEM
+resetButton.addEventListener("click", resetValues);
 
 getLocalStorage();
