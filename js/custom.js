@@ -90,18 +90,92 @@ function updateDisplay(){
 
 // LOCAL STORAGE FUNCTIONS
 function setLocalStorage(){
-    localStorage.setItem("foodTotal", food.total);
-    localStorage.setItem("woodTotal", wood.total);
-    localStorage.setItem("stoneTotal", stone.total);
+    //localStorage.setItem("foodTotal", food.total);
+    //localStorage.setItem("woodTotal", wood.total);
+    //localStorage.setItem("stoneTotal", stone.total);
+
+    let resourceData = {
+        food:food,
+        wood:wood,
+        stone:stone
+    }
+
+    // DEBUG
+    console.log("ResourceData: ")
+    console.log(resourceData);
+    console.log("JSON Stringified resourceData");
+    console.log(JSON.stringify(resourceData));
+
+    try{
+        // CONVERTS THE resourceData Object INTO A JSON STRING FOR localStorage
+        localStorage.setItem("resourceStorage", JSON.stringify(resourceData));
+    }
+    catch(error){
+        console.log("Error: Cannot set localStorage: " + error);
+    }
 }
 // NEED || IN CASE NO VALUE STORED IN LOCAL STORAGE
 function getLocalStorage(){
     // parseInt required to convert loaded values to integers
-    food.total = parseInt(localStorage.getItem("foodTotal") || food.total);
-    wood.total = parseInt(localStorage.getItem("woodTotal") || wood.total);
-    stone.total = parseInt(localStorage.getItem("stoneTotal") || stone.total);
+    // food.total = parseInt(localStorage.getItem("foodTotal") || food.total);
+    // wood.total = parseInt(localStorage.getItem("woodTotal") || wood.total);
+    // stone.total = parseInt(localStorage.getItem("stoneTotal") || stone.total);
+
+    let resourceItem;
+    let loadResourceData;
+    try{
+        resourceItem = localStorage.getItem("resourceStorage");
+    }
+    catch(error){
+        console.log("Error: Cannot load data: " + error)
+    }
+    if(resourceItem){
+        // THIS LOADS UP THE STORED DATA AND "UN-STRINGIFIES" BACK INTO AN OBJECT:
+        // RESOURCE.PROPERTY.VALUE
+        loadResourceData = JSON.parse(resourceItem);
+        console.log("loadResourceData: ")
+        console.log(loadResourceData);
+
+        // returns the cout of items in the object (3)
+        let loadedResourcesCount = Object.keys(loadResourceData).length;
+        
+        // FOOD DATA
+        if(loadResourceData.food.name != null){
+            food.name = loadResourceData.food.name;
+        }
+        if(loadResourceData.food.total != null){
+            food.total = loadResourceData.food.total;
+        }
+        if(loadResourceData.food.clickValue != null){
+            food.clickValue = loadResourceData.food.clickValue;
+        }
+        // WOOD DATA
+        if(loadResourceData.wood.name != null){
+            wood.name = loadResourceData.wood.name;
+        }
+        if(loadResourceData.wood.total != null){
+            wood.total = loadResourceData.wood.total;
+        }
+        if(loadResourceData.wood.clickValue != null){
+            wood.clickValue = loadResourceData.wood.clickValue;
+        }
+        // STONE DATA
+        if(loadResourceData.stone.name != null){
+            stone.name = loadResourceData.stone.name;
+        }
+        if(loadResourceData.stone.total != null){
+            stone.total = loadResourceData.stone.total;
+        }
+        if(loadResourceData.stone.clickValue != null){
+            stone.clickValue = loadResourceData.stone.clickValue;
+        }
 
 
+
+    }
+    else{
+        console.log("No localStorage found");
+    }
     updateDisplay();
 }
 function resetValues(){
