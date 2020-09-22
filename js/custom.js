@@ -185,10 +185,6 @@ function setLocalStorage(){
 }
 
 function getLocalStorage(){
-    // parseInt required to convert loaded values to integers
-    // food.total = parseInt(localStorage.getItem("foodTotal") || food.total);
-    // wood.total = parseInt(localStorage.getItem("woodTotal") || wood.total);
-    // stone.total = parseInt(localStorage.getItem("stoneTotal") || stone.total);
 
     let loadedResourceData;
     let loadedUpgradeData;
@@ -255,19 +251,8 @@ function getLocalStorage(){
     }
 
     if(loadedUpgradeData){
-        convertedUpgradeData = JSON.parse(loadedUpgradeData);
-        //console.log("convertedUpgradeData: ")
-        //console.log(convertedUpgradeData);
+        upgradesList = JSON.parse(loadedUpgradeData);
 
-        if(convertedUpgradeData.doubleClickFood){
-            upgradesList.doubleClickFood = convertedUpgradeData.doubleClickFood;            
-        }
-        if(convertedUpgradeData.doubleClickWood){
-            upgradesList.doubleClickWood = convertedUpgradeData.doubleClickWood;
-        }
-        if(convertedUpgradeData.doubleClickStone){
-            upgradesList.doubleClickStone = convertedUpgradeData.doubleClickStone;
-        }
     }
 
     updateUpgradesDisplay();
