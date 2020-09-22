@@ -21,20 +21,27 @@ class Resource {
 
 }
 
+let upgradesList = {
+    doubleClickFood: false,
+    doubleClickWood: false,
+    doubleClickStone: false,
+    quadrupleClickFood: false
+}
 
 
 
 function initializeValues(){
     //console.log('initialized');
-
     food = new Resource('food', 0, 1);
     wood = new Resource('wood', 0, 1);
     stone = new Resource('stone', 0, 1);
 
+    // LOOPS THROUGH EACH KEY IN THE upgradesList OBJECT AND SETS THEM TO FALSE
+    Object.keys(upgradesList).forEach(function(key){
+        upgradesList[key] = false;
+    });
+
 }
-
-
-
 
 
 // INITIAL LOAD OF RESOURCES ON PAGELOAD
@@ -47,13 +54,13 @@ const foodButton = document.getElementById('food__button');
 const woodButton = document.getElementById('wood__button');
 const stoneButton = document.getElementById('stone__button');
 const resetButton = document.getElementById('management__reset');
+// UPGRADE BUTTONS
+const doubleClickFoodButton = document.getElementById("doubleclick--food");
+const doubleClickWoodButton = document.getElementById("doubleclick--wood");
+const doubleClickStoneButton = document.getElementById("doubleclick--stone");
 
 const upgradeButtons = document.querySelectorAll('.upgrade__button');
-upgradeButtons.forEach(function(currentButton){
-    currentButton.addEventListener('click', function(){
-        upgrade(currentButton);
-    });
-});
+
 
 // DISPLAYS
 const foodDisplay = document.getElementById('food__count');
@@ -84,9 +91,21 @@ function upgrade(upgradeButton){
 
     if(upgradeButton.id === 'doubleclick--food'){
         food.clickValue = food.clickValue*2;
-        console.log(food.clickValue);
-        upgradeButton.disabled = true;
+        //console.log(food.clickValue);
+        upgradesList.doubleClickFood = true;
+    }    
+    if(upgradeButton.id === 'doubleclick--wood'){
+        wood.clickValue = wood.clickValue*2;
+        //console.log(food.clickValue);
+        upgradesList.doubleClickWood = true;
     }
+    if(upgradeButton.id === 'doubleclick--stone'){
+        stone.clickValue = stone.clickValue*2;
+        //console.log(food.clickValue);
+        upgradesList.doubleClickStone = true;
+    }
+
+    updateUpgradesDisplay();
 }
 
 
@@ -97,6 +116,29 @@ function updateDisplay(){
     woodDisplay.textContent = wood.total;
     stoneDisplay.textContent = stone.total;
 
+}
+
+function updateUpgradesDisplay(){
+    if(upgradesList.doubleClickFood === true){
+        doubleClickFoodButton.disabled = true;
+    }
+    else{
+        doubleClickFoodButton.disabled = false;
+    }
+    if(upgradesList.doubleClickWood === true){
+        doubleClickWoodButton.disabled = true;
+    }
+    else{
+        doubleClickWoodButton.disabled = false;
+    }
+    if(upgradesList.doubleClickStone === true){
+        doubleClickStoneButton.disabled = true;
+    }
+    else{
+        doubleClickStoneButton.disabled = false;
+    }
+
+    
 }
 
 // LOCAL STORAGE FUNCTIONS
@@ -111,15 +153,31 @@ function setLocalStorage(){
         stone:stone
     }
 
-    // DEBUG
+
+    let upgradeData = {
+        doubleClickFood:upgradesList.doubleClickFood,
+        doubleClickWood:upgradesList.doubleClickWood,
+        doubleClickStone:upgradesList.doubleClickStone,
+        quadrupleClickFood:upgradesList.quadrupleClickFood
+    }
+
+    // DEBUGGING
+    /*
     console.log("ResourceData: ")
     console.log(resourceData);
     console.log("JSON Stringified resourceData");
     console.log(JSON.stringify(resourceData));
 
+    console.log("UpgradeData:");
+    console.log(upgradeData);
+    */
+
+
     try{
         // CONVERTS THE resourceData Object INTO A JSON STRING FOR localStorage
+        // EG {"food":{"name":"food","total":377,"clickValue":128}}
         localStorage.setItem("resourceStorage", JSON.stringify(resourceData));
+        localStorage.setItem("upgradeStorage" , JSON.stringify(upgradeData));
     }
     catch(error){
         console.log("Error: Cannot set localStorage: " + error);
@@ -133,19 +191,30 @@ function getLocalStorage(){
     // stone.total = parseInt(localStorage.getItem("stoneTotal") || stone.total);
 
     let loadedResourceData;
+    let loadedUpgradeData;
     let convertedResourceData;
     try{
         loadedResourceData = localStorage.getItem("resourceStorage");
+        //console.log("loadedResourceData: ")
+        //console.log(loadedResourceData);
     }
     catch(error){
-        console.log("Error: Cannot load data: " + error)
+        console.warn("Error: Cannot load resource data: " + error)
+    }
+    try{
+        loadedUpgradeData = localStorage.getItem("upgradeStorage")
+        //console.log("loadedUpgradeData: ")
+        //console.log(loadedUpgradeData);
+    }
+    catch(error){
+        console.warn("Error: Cannot load upgrade data: " + error)
     }
     if(loadedResourceData){
         // THIS LOADS UP THE STORED DATA AND "UN-STRINGIFIES" BACK INTO AN OBJECT:
         // RESOURCE.PROPERTY.VALUE
         convertedResourceData = JSON.parse(loadedResourceData);
-        console.log("loadResourceData: ")
-        console.log(convertedResourceData);
+        //console.log("convertedResourceData: ")
+        // console.log(convertedResourceData);
         
         // FOOD DATA
         //if(loadResourceData.food.name != null){
@@ -182,27 +251,37 @@ function getLocalStorage(){
 
     }
     else{
-        console.log("No localStorage found");
+        console.warn("No localStorage for resources found");
     }
+
+    if(loadedUpgradeData){
+        convertedUpgradeData = JSON.parse(loadedUpgradeData);
+        //console.log("convertedUpgradeData: ")
+        //console.log(convertedUpgradeData);
+
+        if(convertedUpgradeData.doubleClickFood){
+            upgradesList.doubleClickFood = convertedUpgradeData.doubleClickFood;            
+        }
+        if(convertedUpgradeData.doubleClickWood){
+            upgradesList.doubleClickWood = convertedUpgradeData.doubleClickWood;
+        }
+        if(convertedUpgradeData.doubleClickStone){
+            upgradesList.doubleClickStone = convertedUpgradeData.doubleClickStone;
+        }
+    }
+
+    updateUpgradesDisplay();
+
     updateDisplay();
 }
 function resetValues(){
 
+    console.log('Reset Triggered, resetting values');
+    
+    initializeValues();
+    clearLocalStorage();
+    updateUpgradesDisplay();
 
-
-        console.log('Reset Triggered, resetting values');
-        /*
-        let foodKeys = Object.keys(food);
-
-        for (var i = 0; i < foodKeys.length; i++) {
-            let val = food[foodKeys[i]];
-            console.log('reset val: ' + val);
-        }
-        */
-        //food = new Resource('food', 0, 1);
-        
-        initializeValues();
-        clearLocalStorage();
 
 
 }
@@ -227,7 +306,11 @@ stoneButton.addEventListener("click", function(){
 });
 
 // UPGRADES
-
+upgradeButtons.forEach(function(currentButton){
+    currentButton.addEventListener('click', function(){
+        upgrade(currentButton);
+    });
+});
 
 // SYSTEM
 resetButton.addEventListener("click", resetValues);
