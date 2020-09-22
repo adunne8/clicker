@@ -11,6 +11,7 @@ class Resource {
         this.clickValue = clickValue;
     }
 
+    //LISTS OUT ALL PROPERTIES+VALUES OF THE CLASS
     toString(){
 
         for(var property in this){
@@ -29,7 +30,7 @@ let upgradesList = {
 }
 
 
-
+// FOR LOADING, RESETS
 function initializeValues(){
     //console.log('initialized');
     food = new Resource('food', 0, 1);
@@ -50,16 +51,20 @@ initializeValues();
 // ** HTML ELEMENTS ASSIGNMENT
 
 // BUTTONS
+// RESOURCE BUTTONS
 const foodButton = document.getElementById('food__button');
 const woodButton = document.getElementById('wood__button');
 const stoneButton = document.getElementById('stone__button');
-const resetButton = document.getElementById('management__reset');
 // UPGRADE BUTTONS
 const doubleClickFoodButton = document.getElementById("doubleclick--food");
 const doubleClickWoodButton = document.getElementById("doubleclick--wood");
 const doubleClickStoneButton = document.getElementById("doubleclick--stone");
 
 const upgradeButtons = document.querySelectorAll('.upgrade__button');
+
+// SYSTEM MANAGEMENT BUTTONS
+const resetButton = document.getElementById('management__reset');
+
 
 
 // DISPLAYS
@@ -77,9 +82,6 @@ function addResource(resource){
     // ADDS 1 RESOURCE TO THE CLICKED RESOURCE
     resource.total = resource.total + resource.clickValue;
 
-    console.log(resource.name + ': ' + resource.total);
-
-
     // UPDATE LOCAL STORAGE AND DISPLAYS
     setLocalStorage();
     updateDisplay();
@@ -91,17 +93,14 @@ function upgrade(upgradeButton){
 
     if(upgradeButton.id === 'doubleclick--food'){
         food.clickValue = food.clickValue*2;
-        //console.log(food.clickValue);
         upgradesList.doubleClickFood = true;
     }    
     if(upgradeButton.id === 'doubleclick--wood'){
         wood.clickValue = wood.clickValue*2;
-        //console.log(food.clickValue);
         upgradesList.doubleClickWood = true;
     }
     if(upgradeButton.id === 'doubleclick--stone'){
         stone.clickValue = stone.clickValue*2;
-        //console.log(food.clickValue);
         upgradesList.doubleClickStone = true;
     }
 
@@ -118,6 +117,7 @@ function updateDisplay(){
 
 }
 
+// THIS FUNCTION WILL CHECK IF THE UPGRADE BUTTON SHOULD BE ENABLED OR NOT
 function updateUpgradesDisplay(){
     if(upgradesList.doubleClickFood === true){
         doubleClickFoodButton.disabled = true;
@@ -143,23 +143,12 @@ function updateUpgradesDisplay(){
 
 // LOCAL STORAGE FUNCTIONS
 function setLocalStorage(){
-    //localStorage.setItem("foodTotal", food.total);
-    //localStorage.setItem("woodTotal", wood.total);
-    //localStorage.setItem("stoneTotal", stone.total);
 
     let resourceData = {
         food:food,
         wood:wood,
         stone:stone
     }
-
-
-    // let upgradeData = {
-    //     doubleClickFood:upgradesList.doubleClickFood,
-    //     doubleClickWood:upgradesList.doubleClickWood,
-    //     doubleClickStone:upgradesList.doubleClickStone,
-    //     quadrupleClickFood:upgradesList.quadrupleClickFood
-    // }
 
     // DEBUGGING
     /*
@@ -168,14 +157,13 @@ function setLocalStorage(){
     console.log("JSON Stringified resourceData");
     console.log(JSON.stringify(resourceData));
 
-    console.log("UpgradeData:");
-    console.log(upgradeData);
     */
 
 
     try{
         // CONVERTS THE resourceData Object INTO A JSON STRING FOR localStorage
         // EG {"food":{"name":"food","total":377,"clickValue":128}}
+
         localStorage.setItem("resourceStorage", JSON.stringify(resourceData));
         localStorage.setItem("upgradeStorage" , JSON.stringify(upgradesList));
     }
@@ -184,6 +172,8 @@ function setLocalStorage(){
     }
 }
 
+
+// THIS FUNCTION IS CALLED ON PAGE LOAD TO GET THE PREVIOUS SAVED GAME DATA
 function getLocalStorage(){
 
     let loadedResourceData;
@@ -213,9 +203,6 @@ function getLocalStorage(){
         // console.log(convertedResourceData);
         
         // FOOD DATA
-        //if(loadResourceData.food.name != null){
-        //    food.name = loadResourceData.food.name;
-        //}
         if(convertedResourceData.food.total != null){
             food.total = convertedResourceData.food.total;
         }
@@ -223,9 +210,6 @@ function getLocalStorage(){
             food.clickValue = convertedResourceData.food.clickValue;
         }
         // WOOD DATA
-        //if(loadResourceData.wood.name != null){
-        //    wood.name = loadResourceData.wood.name;
-        //}
         if(convertedResourceData.wood.total != null){
             wood.total = convertedResourceData.wood.total;
         }
@@ -233,17 +217,12 @@ function getLocalStorage(){
             wood.clickValue = convertedResourceData.wood.clickValue;
         }
         // STONE DATA
-        //if(loadResourceData.stone.name != null){
-        //    stone.name = loadResourceData.stone.name;
-        //}
         if(convertedResourceData.stone.total != null){
             stone.total = convertedResourceData.stone.total;
         }
         if(convertedResourceData.stone.clickValue != null){
             stone.clickValue = convertedResourceData.stone.clickValue;
         }
-
-
 
     }
     else{
@@ -261,13 +240,11 @@ function getLocalStorage(){
 }
 function resetValues(){
 
-    console.log('Reset Triggered, resetting values');
+    console.warn('Reset Triggered, resetting values');
     
     initializeValues();
     clearLocalStorage();
     updateUpgradesDisplay();
-
-
 
 }
 
