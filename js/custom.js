@@ -154,12 +154,12 @@ function setLocalStorage(){
     }
 
 
-    let upgradeData = {
-        doubleClickFood:upgradesList.doubleClickFood,
-        doubleClickWood:upgradesList.doubleClickWood,
-        doubleClickStone:upgradesList.doubleClickStone,
-        quadrupleClickFood:upgradesList.quadrupleClickFood
-    }
+    // let upgradeData = {
+    //     doubleClickFood:upgradesList.doubleClickFood,
+    //     doubleClickWood:upgradesList.doubleClickWood,
+    //     doubleClickStone:upgradesList.doubleClickStone,
+    //     quadrupleClickFood:upgradesList.quadrupleClickFood
+    // }
 
     // DEBUGGING
     /*
@@ -177,10 +177,10 @@ function setLocalStorage(){
         // CONVERTS THE resourceData Object INTO A JSON STRING FOR localStorage
         // EG {"food":{"name":"food","total":377,"clickValue":128}}
         localStorage.setItem("resourceStorage", JSON.stringify(resourceData));
-        localStorage.setItem("upgradeStorage" , JSON.stringify(upgradeData));
+        localStorage.setItem("upgradeStorage" , JSON.stringify(upgradesList));
     }
     catch(error){
-        console.log("Error: Cannot set localStorage: " + error);
+        console.error("Error: Cannot set localStorage: " + error);
     }
 }
 
