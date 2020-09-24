@@ -151,6 +151,13 @@ function upgrade(upgradeButton){
 
 // UPDATING THE PAGE
 function updateDisplay(){
+
+    updateTotalsDisplay();
+    updatePopulationDisplay();
+
+}
+// THIS UPDATES THE TOTAL NUMBER OF RESOURCES/WORKERS ETC ON THE SCREEN
+function updateTotalsDisplay(){
     foodDisplay.textContent = food.total;
     woodDisplay.textContent = wood.total;
     stoneDisplay.textContent = stone.total;
@@ -159,7 +166,6 @@ function updateDisplay(){
     farmerDisplay.textContent = farmer.total;
     lumberjackDisplay.textContent = lumberjack.total;
     minerDisplay.textContent = miner.total;
-
 }
 
 // THIS FUNCTION WILL CHECK IF THE UPGRADE BUTTON SHOULD BE ENABLED OR NOT
@@ -184,6 +190,29 @@ function updateUpgradesDisplay(){
     }
 
     
+}
+// THIS FUNCTION WILL CHECK IF THE WORKERS BUTTONS SHOULD BE ENABLED OR NOT
+function updatePopulationDisplay(){
+
+    if(food.total >= worker.cost){
+        newWorkerButton.disabled = false;
+    }
+    else{
+        newWorkerButton.disabled = true;
+    }
+
+    if(worker.total > 0){
+        newFarmerButton.disabled = false;
+        newLumberjackButton.disabled = false;
+        newMinerButton.disabled = false;
+    }
+    else{
+        newFarmerButton.disabled = true;
+        newLumberjackButton.disabled = true;
+        newMinerButton.disabled = true;
+    }
+
+
 }
 
 // WORKKER FUNCTIONS
