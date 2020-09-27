@@ -60,6 +60,7 @@ class Upgrade{
         }
 
     }
+    
 
 }
 
@@ -309,6 +310,7 @@ function newWorker(num){
     else{
         console.log("cannot add worker, not enough food: " + food.total + " for worker cost: " + worker.cost*num);
     }
+    saveData();
     updateDisplay();
 
 };
@@ -332,7 +334,7 @@ function assignWorker(job, num){
             worker.total = worker.total - num;
 
         }
-
+        saveData();
         updateDisplay();
     }
 }
@@ -354,6 +356,13 @@ function saveData(){
         doubleClickStone:doubleClickStone
     }
 
+    let workerData = {
+        worker:worker,
+        farmer:farmer,
+        lumberjack:lumberjack,
+        miner:miner
+    }
+
     // DEBUGGING
     /*
     console.log("ResourceData: ")
@@ -370,6 +379,7 @@ function saveData(){
 
         localStorage.setItem("resourceStorage", JSON.stringify(resourceData));
         localStorage.setItem("upgradeStorage" , JSON.stringify(upgradeData));
+        localStorage.setItem("workerStorage", JSON.stringify(workerData));
     }
     catch(error){
         console.error("Error: Cannot set localStorage: " + error);
@@ -384,6 +394,10 @@ function loadData(){
     let loadedUpgradeData;
     let convertedResourceData;
     let convertedUpgradeData;
+    let loadedWorkerData;
+    let convertedWorkerData;
+
+
     try{
         loadedResourceData = localStorage.getItem("resourceStorage");
         //console.log("loadedResourceData: ")
@@ -400,6 +414,13 @@ function loadData(){
     catch(error){
         console.warn("Error: Cannot load upgrade data: " + error)
     }
+    try{
+        loadedWorkerData = localStorage.getItem("workerStorage");
+    }
+    catch(error){
+        console.warn("Error: Cannot load worker data: " + error);
+    }
+
     if(loadedResourceData){
         // THIS LOADS UP THE STORED DATA AND "UN-STRINGIFIES" BACK INTO AN OBJECT:
         // RESOURCE.PROPERTY.VALUE
@@ -437,12 +458,7 @@ function loadData(){
     if(loadedUpgradeData){
         //upgradesList = JSON.parse(loadedUpgradeData);
 
-        console.log(loadedUpgradeData);
-
-
         convertedUpgradeData = JSON.parse(loadedUpgradeData);
-
-        console.log(convertedUpgradeData);
 
         if(doubleClickFood){
             doubleClickFood.active = convertedUpgradeData.doubleClickFood.active;
@@ -455,6 +471,36 @@ function loadData(){
         }
 
 
+    }
+    else{
+        console.warn("No localStorage for upgrades found");
+    }
+
+    if(loadedWorkerData){
+        console.log(JSON.parse(loadedWorkerData));
+        convertedWorkerData = JSON.parse(loadedWorkerData);
+
+        if(worker){
+            worker.total = convertedWorkerData.worker.total;
+            worker.cost = convertedWorkerData.worker.cost;
+        }
+        if(farmer){
+            farmer.total = convertedWorkerData.farmer.total;
+            farmer.effeciency = convertedWorkerData.farmer.effeciency;
+        }
+        if(lumberjack){
+            lumberjack.total = convertedWorkerData.lumberjack.total;
+            lumberjack.effeciency = convertedWorkerData.lumberjack.effeciency;
+        }
+        if(miner){
+            miner.total = convertedWorkerData.miner.total;
+            miner.effeciency = convertedWorkerData.miner.effeciency;
+        }
+
+        
+    }
+    else{
+        console.warn("No localStorage for workers found");
     }
 
     updateUpgradesDisplay();
