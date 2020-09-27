@@ -10,26 +10,40 @@
 <body>
     <section id="resource__section" class="panel">
 
-        <div class="food__row">
+        <div class="resource__row">
             <button id="food__button">Gather food</button><span>Food: <span id="food__count">0</span>
         </div>
-        <div class="wood__row">
+        <div class="resource__row">
             <button id="wood__button">Gather wood</button><span>Wood: <span id="wood__count">0</span>
         </div>
-        <div class="stone__row">
+        <div class="resource__row">
             <button id="stone__button">Gather stone</button><span>Stone: <span id="stone__count">0</span>
         </div>
-
-        
 
     </section>
 
     <section id="upgrade_section" class="panel">
-        <button id="doubleclick--food" class="upgrade__button">Double Food Per Click</button>
-        <button id="doubleclick--wood" class="upgrade__button">Double wood Per Click</button>
-        <button id="doubleclick--stone" class="upgrade__button">Double stone Per Click</button>
+        <button id="doubleclick--food" class="upgrade__button">Double Food Per Click<br>(100) Food</button>
+        <button id="doubleclick--wood" class="upgrade__button">Double wood Per Click<br>(100) Wood</button>
+        <button id="doubleclick--stone" class="upgrade__button">Double stone Per Click<br>(100) Stone</button>
     </section>
 
+    <section id="worker_section">
+        <div class="worker_row">
+            <button id="worker__new" class="worker__button">Add worker</button><span>Workers: <span id="worker__count">0</span>
+        </div>
+        <div class="worker__row">
+            <button id="worker__farmer" class="worker__button">Add farmer</button><span>Farmers: <span id="farmer__count">0</span>
+        </div>
+        <div class="worker__row">
+            <button id="worker__lumberjack" class="worker__button">Add lumberjack</button><span>Lumberjacks: <span id="lumberjack__count">0</span>
+
+        </div>
+        <div class="worker__row">
+            <button id="worker__miner" class="worker__button">Add miner</button><span>Food: <span id="miner__count">0</span>
+        </div>
+    </section>
+    
     <section id="system__section">
         <button type="button" id="management__reset">Reset</button>
 

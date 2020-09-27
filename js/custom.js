@@ -1,3 +1,5 @@
+"use strict";
+
 // ****** DECLARATIONS ******
 let food;
 let wood;
@@ -22,25 +24,84 @@ class Resource {
 
 }
 
-let upgradesList = {
-    doubleClickFood: false,
-    doubleClickWood: false,
-    doubleClickStone: false,
-    quadrupleClickFood: false
+
+class Worker {
+    constructor(name, total, effeciency, cost = 0){
+        this.name = name,
+        this.total = total,
+        this.effeciency = effeciency,
+        this.cost = cost
+    }
+    //LISTS OUT ALL PROPERTIES+VALUES OF THE CLASS
+    toString(){
+
+        for(var property in this){
+            console.log(property + ': ' + this[property]);
+        }
+
+    }
 }
+
+// TO BE INVESTIGATED IN THE FUTURE FOR UPGRADE PROCESSING
+class Upgrade{
+    constructor(name, active, foodCost = 0, woodCost = 0, stoneCost = 0){
+        this.name = name,
+        this.active = active,
+        this.foodCost = foodCost,
+        this.woodCost = woodCost,
+        this.stoneCost = stoneCost
+    }
+
+    //LISTS OUT ALL PROPERTIES+VALUES OF THE CLASS
+    toString(){
+
+        for(var property in this){
+            console.log(property + ': ' + this[property]);
+        }
+
+    }
+    
+
+}
+
+
+
+let doubleClickFood;
+let doubleClickWood;
+let doubleClickStone;
+
+let worker;
+let farmer;
+let lumberjack;
+let miner;
+
 
 
 // FOR LOADING, RESETS
 function initializeValues(){
-    //console.log('initialized');
-    food = new Resource('food', 0, 1);
-    wood = new Resource('wood', 0, 1);
-    stone = new Resource('stone', 0, 1);
+    console.log('initialized');
+    food = new Resource("food", 0, 1);
+    wood = new Resource("wood", 0, 1);
+    stone = new Resource("stone", 0, 1);
+
+    worker = new Worker("worker", 0, 1, 10);
+    farmer = new Worker("farmer", 0, 1);
+    lumberjack = new Worker("lumberjack", 0, 1);
+    miner = new Worker("miner", 0, 1);
 
     // LOOPS THROUGH EACH KEY IN THE upgradesList OBJECT AND SETS THEM TO FALSE
+    /*
     Object.keys(upgradesList).forEach(function(key){
         upgradesList[key] = false;
     });
+    */
+
+    // FUTURE UPGRADES
+    // NAME, ACTIVE, FOOD, WOOD, STONE
+    doubleClickFood = new Upgrade("doubleClickFood", false, 100, 0, 0);
+    doubleClickWood = new Upgrade("doubleClickWood", false, 0, 100, 0);
+    doubleClickStone = new Upgrade("doubleClickStone", false, 0, 0, 100);
+
 
 }
 
@@ -60,6 +121,13 @@ const doubleClickFoodButton = document.getElementById("doubleclick--food");
 const doubleClickWoodButton = document.getElementById("doubleclick--wood");
 const doubleClickStoneButton = document.getElementById("doubleclick--stone");
 
+// WORKER BUTTONS
+const newWorkerButton = document.getElementById('worker__new');
+const newFarmerButton = document.getElementById('worker__farmer');
+const newLumberjackButton = document.getElementById('worker__lumberjack');
+const newMinerButton = document.getElementById('worker__miner');
+
+
 const upgradeButtons = document.querySelectorAll('.upgrade__button');
 
 // SYSTEM MANAGEMENT BUTTONS
@@ -72,6 +140,10 @@ const foodDisplay = document.getElementById('food__count');
 const woodDisplay = document.getElementById('wood__count');
 const stoneDisplay = document.getElementById('stone__count');
 
+const workerDisplay = document.getElementById('worker__count');
+const farmerDisplay = document.getElementById('farmer__count');
+const lumberjackDisplay = document.getElementById('lumberjack__count');
+const minerDisplay = document.getElementById('miner__count');
 
 
 
@@ -83,71 +155,212 @@ function addResource(resource){
     resource.total = resource.total + resource.clickValue;
 
     // UPDATE LOCAL STORAGE AND DISPLAYS
-    setLocalStorage();
+    saveData();
     updateDisplay();
 }
 
-// UPGRADES PROCESSOR FUNCTION
-function upgrade(upgradeButton){
-    console.log(upgradeButton.id);
 
-    if(upgradeButton.id === 'doubleclick--food'){
-        food.clickValue = food.clickValue*2;
-        upgradesList.doubleClickFood = true;
-    }    
-    if(upgradeButton.id === 'doubleclick--wood'){
-        wood.clickValue = wood.clickValue*2;
-        upgradesList.doubleClickWood = true;
+function upgradePurchaseCheck(selectedUpgrade){
+    // compare resource totals vs upgrade totals
+
+    if(selectedUpgrade.foodCost <= food.total 
+        && selectedUpgrade.woodCost <= wood.total
+        && selectedUpgrade.stoneCost <= stone.total){
+            return true;
     }
+    return false;
+}
+
+// UPGRADES PROCESSOR FUNCTION
+// CHECKS THE TYPE OF UPGRADE AND WHETHER IT CAN BE PURCHASED WITH THE GIVEN RESOURCES
+function upgrade(upgradeButton){
+    console.log("Attempting: " + upgradeButton.id);
+    
+    if(upgradeButton.id === 'doubleclick--food' && upgradePurchaseCheck(doubleClickFood)){
+        food.clickValue = food.clickValue*2;
+        doubleClickFood.active = true;
+        food.total = food.total - 100;
+    }    
+    else if(upgradeButton.id === 'doubleclick--wood' && upgradePurchaseCheck(doubleClickWood)){
+
+        wood.clickValue = wood.clickValue*2;
+        doubleClickWood.active = true;
+        wood.total = wood.total - doubleClickWood.woodCost;
+        console.log("Upgrading wood");
+    }
+    else if(upgradeButton.id === 'doubleclick--stone' && upgradePurchaseCheck(doubleClickStone)){
+        stone.clickValue = stone.clickValue*2;
+        doubleClickStone.active = true;
+        stone.total = stone.total - doubleClickStone.stoneCost;
+        console.log("Upgrading stone");
+    }
+    else{
+        console.log("Not valid resources")
+    }
+
+
+    
     if(upgradeButton.id === 'doubleclick--stone'){
         stone.clickValue = stone.clickValue*2;
-        upgradesList.doubleClickStone = true;
+        doubleClickStone.active = true;
     }
 
-    updateUpgradesDisplay();
+    saveData();
+    updateDisplay();
 }
 
 
 
 // UPDATING THE PAGE
 function updateDisplay(){
+
+    updateTotalsDisplay();
+    updatePopulationDisplay();
+    updateUpgradesDisplay();
+
+}
+// THIS UPDATES THE TOTAL NUMBER OF RESOURCES/WORKERS ETC ON THE SCREEN
+function updateTotalsDisplay(){
     foodDisplay.textContent = food.total;
     woodDisplay.textContent = wood.total;
     stoneDisplay.textContent = stone.total;
 
+    workerDisplay.textContent = worker.total;
+    farmerDisplay.textContent = farmer.total;
+    lumberjackDisplay.textContent = lumberjack.total;
+    minerDisplay.textContent = miner.total;
 }
 
-// THIS FUNCTION WILL CHECK IF THE UPGRADE BUTTON SHOULD BE ENABLED OR NOT
+// THIS FUNCTION WILL CHECK HOW AN UPGRADE BUTTON SHOULD BE DISPLAYED
+// IS IT ACTIVE: HIDDEN
+// IS IT NOT AFFORDABLE: DISABLED
+// CAN IT BE PURCAHSED: ENABLED
 function updateUpgradesDisplay(){
-    if(upgradesList.doubleClickFood === true){
-        doubleClickFoodButton.disabled = true;
+    if(doubleClickFood.active === true){
+        doubleClickFoodButton.hidden = true;
     }
     else{
-        doubleClickFoodButton.disabled = false;
+        doubleClickFoodButton.hidden = false;
+        if(upgradePurchaseCheck(doubleClickFood)){
+            doubleClickFoodButton.disabled = false;
+        }
+        else{
+            doubleClickFoodButton.disabled = true;
+        }
     }
-    if(upgradesList.doubleClickWood === true){
-        doubleClickWoodButton.disabled = true;
+    if(doubleClickWood.active === true){
+        doubleClickWoodButton.hidden = true;
     }
     else{
-        doubleClickWoodButton.disabled = false;
+        doubleClickWoodButton.hidden = false;
+        if(upgradePurchaseCheck(doubleClickWood)){
+            doubleClickWoodButton.disabled = false;
+        }
+        else{
+            doubleClickWoodButton.disabled = true;
+        }
     }
-    if(upgradesList.doubleClickStone === true){
-        doubleClickStoneButton.disabled = true;
+    if(doubleClickStone.active === true){
+        doubleClickStoneButton.hidden = true;
     }
     else{
-        doubleClickStoneButton.disabled = false;
+        doubleClickStoneButton.hidden = false;
+        if(upgradePurchaseCheck(doubleClickStone)){
+            doubleClickStoneButton.disabled = false;
+        }
+        else{
+            doubleClickStoneButton.disabled = true;
+        }
     }
 
     
 }
+// THIS FUNCTION WILL CHECK IF THE WORKERS BUTTONS SHOULD BE ENABLED OR NOT
+function updatePopulationDisplay(){
 
-// LOCAL STORAGE FUNCTIONS
-function setLocalStorage(){
+    if(food.total >= worker.cost){
+        newWorkerButton.disabled = false;
+    }
+    else{
+        newWorkerButton.disabled = true;
+    }
+
+    if(worker.total > 0){
+        newFarmerButton.disabled = false;
+        newLumberjackButton.disabled = false;
+        newMinerButton.disabled = false;
+    }
+    else{
+        newFarmerButton.disabled = true;
+        newLumberjackButton.disabled = true;
+        newMinerButton.disabled = true;
+    }
+
+
+}
+
+// WORKKER FUNCTIONS
+function newWorker(num){
+
+    if(food.total >= worker.cost*num){
+        console.log("adding worker");
+        worker.total = worker.total + num;
+        food.total = food.total - worker.cost*num;
+    }
+    else{
+        console.log("cannot add worker, not enough food: " + food.total + " for worker cost: " + worker.cost*num);
+    }
+    saveData();
+    updateDisplay();
+
+};
+function assignWorker(job, num){
+    console.log("Attempting to assigning " + num + " workers as " + job);
+    if (worker.total >= num){
+        if(job === farmer.name){
+            console.log("Adding farmer");
+            farmer.total = farmer.total + num;
+            worker.total = worker.total - num;
+        }
+        else if (job === lumberjack.name){
+            console.log("Adding lumberjack");
+            lumberjack.total = lumberjack.total + num;
+            worker.total = worker.total - num;
+
+        }
+        else if(job === miner.name){
+            console.log("Adding miner");
+            miner.total = miner.total + num;
+            worker.total = worker.total - num;
+
+        }
+        saveData();
+        updateDisplay();
+    }
+}
+
+// LOCAL STORAGE SAVING/LOADING/RESET FUNCTIONS
+
+// SAVING DATA
+function saveData(){
 
     let resourceData = {
         food:food,
         wood:wood,
         stone:stone
+    }
+
+    let upgradeData = {
+        doubleClickFood:doubleClickFood,
+        doubleClickWood:doubleClickWood,
+        doubleClickStone:doubleClickStone
+    }
+
+    let workerData = {
+        worker:worker,
+        farmer:farmer,
+        lumberjack:lumberjack,
+        miner:miner
     }
 
     // DEBUGGING
@@ -165,7 +378,8 @@ function setLocalStorage(){
         // EG {"food":{"name":"food","total":377,"clickValue":128}}
 
         localStorage.setItem("resourceStorage", JSON.stringify(resourceData));
-        localStorage.setItem("upgradeStorage" , JSON.stringify(upgradesList));
+        localStorage.setItem("upgradeStorage" , JSON.stringify(upgradeData));
+        localStorage.setItem("workerStorage", JSON.stringify(workerData));
     }
     catch(error){
         console.error("Error: Cannot set localStorage: " + error);
@@ -174,11 +388,16 @@ function setLocalStorage(){
 
 
 // THIS FUNCTION IS CALLED ON PAGE LOAD TO GET THE PREVIOUS SAVED GAME DATA
-function getLocalStorage(){
+function loadData(){
 
     let loadedResourceData;
     let loadedUpgradeData;
     let convertedResourceData;
+    let convertedUpgradeData;
+    let loadedWorkerData;
+    let convertedWorkerData;
+
+
     try{
         loadedResourceData = localStorage.getItem("resourceStorage");
         //console.log("loadedResourceData: ")
@@ -195,6 +414,13 @@ function getLocalStorage(){
     catch(error){
         console.warn("Error: Cannot load upgrade data: " + error)
     }
+    try{
+        loadedWorkerData = localStorage.getItem("workerStorage");
+    }
+    catch(error){
+        console.warn("Error: Cannot load worker data: " + error);
+    }
+
     if(loadedResourceData){
         // THIS LOADS UP THE STORED DATA AND "UN-STRINGIFIES" BACK INTO AN OBJECT:
         // RESOURCE.PROPERTY.VALUE
@@ -230,28 +456,70 @@ function getLocalStorage(){
     }
 
     if(loadedUpgradeData){
-        upgradesList = JSON.parse(loadedUpgradeData);
+        //upgradesList = JSON.parse(loadedUpgradeData);
 
+        convertedUpgradeData = JSON.parse(loadedUpgradeData);
+
+        if(doubleClickFood){
+            doubleClickFood.active = convertedUpgradeData.doubleClickFood.active;
+        }
+        if(doubleClickWood){
+            doubleClickWood.active = convertedUpgradeData.doubleClickWood.active;
+        }
+        if(doubleClickStone){
+            doubleClickStone.active = convertedUpgradeData.doubleClickStone.active
+        }
+
+
+    }
+    else{
+        console.warn("No localStorage for upgrades found");
+    }
+
+    if(loadedWorkerData){
+        console.log(JSON.parse(loadedWorkerData));
+        convertedWorkerData = JSON.parse(loadedWorkerData);
+
+        if(worker){
+            worker.total = convertedWorkerData.worker.total;
+            worker.cost = convertedWorkerData.worker.cost;
+        }
+        if(farmer){
+            farmer.total = convertedWorkerData.farmer.total;
+            farmer.effeciency = convertedWorkerData.farmer.effeciency;
+        }
+        if(lumberjack){
+            lumberjack.total = convertedWorkerData.lumberjack.total;
+            lumberjack.effeciency = convertedWorkerData.lumberjack.effeciency;
+        }
+        if(miner){
+            miner.total = convertedWorkerData.miner.total;
+            miner.effeciency = convertedWorkerData.miner.effeciency;
+        }
+
+        
+    }
+    else{
+        console.warn("No localStorage for workers found");
     }
 
     updateUpgradesDisplay();
 
     updateDisplay();
 }
+// RESET DATA
 function resetValues(){
 
     console.warn('Reset Triggered, resetting values');
     
     initializeValues();
     clearLocalStorage();
-    updateUpgradesDisplay();
+    updateDisplay();
 
 }
-
+// DELETE THE LOCALSTORAGE ITEM
 function clearLocalStorage(){
     localStorage.clear();
-    // NEED TO RESET THE DISPLAY VALUES PROPERLY
-    updateDisplay();
 }
 
 
@@ -267,6 +535,20 @@ stoneButton.addEventListener("click", function(){
     addResource(stone);
 });
 
+// WORKERS
+newWorkerButton.addEventListener("click", function(){
+    newWorker(1);
+});
+newFarmerButton.addEventListener("click", function(){
+    assignWorker(farmer.name, 1);
+});
+newLumberjackButton.addEventListener("click", function(){
+    assignWorker(lumberjack.name, 1);
+});
+newMinerButton.addEventListener("click", function(){
+    assignWorker(miner.name, 1);
+});
+
 // UPGRADES
 upgradeButtons.forEach(function(currentButton){
     currentButton.addEventListener('click', function(){
@@ -277,4 +559,14 @@ upgradeButtons.forEach(function(currentButton){
 // SYSTEM
 resetButton.addEventListener("click", resetValues);
 
-getLocalStorage();
+loadData();
+
+
+
+function cheat(){
+    food.total = 1000*1000;
+    wood.total = 1000*1000;
+    stone.total = 1000*1000;
+
+    updateDisplay();
+}
