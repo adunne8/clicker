@@ -1,6 +1,6 @@
 "use strict";
 
-// ****** DECLARATIONS ******
+/************** DECLARATIONS **************/
 let food;
 let wood;
 let stone;
@@ -44,8 +44,10 @@ class Worker {
 
 // TO BE INVESTIGATED IN THE FUTURE FOR UPGRADE PROCESSING
 class Upgrade{
-    constructor(name, active, foodCost = 0, woodCost = 0, stoneCost = 0){
+    constructor(name, label, description, active, foodCost = 0, woodCost = 0, stoneCost = 0){
         this.name = name,
+        this.label = label,
+        this.description = description,
         this.active = active,
         this.foodCost = foodCost,
         this.woodCost = woodCost,
@@ -77,39 +79,9 @@ let miner;
 
 
 
-// FOR LOADING, RESETS
-function initializeValues(){
-    console.log('initialized');
-    food = new Resource("food", 0, 1);
-    wood = new Resource("wood", 0, 1);
-    stone = new Resource("stone", 0, 1);
-
-    worker = new Worker("worker", 0, 1, 10);
-    farmer = new Worker("farmer", 0, 1);
-    lumberjack = new Worker("lumberjack", 0, 1);
-    miner = new Worker("miner", 0, 1);
-
-    // LOOPS THROUGH EACH KEY IN THE upgradesList OBJECT AND SETS THEM TO FALSE
-    /*
-    Object.keys(upgradesList).forEach(function(key){
-        upgradesList[key] = false;
-    });
-    */
-
-    // FUTURE UPGRADES
-    // NAME, ACTIVE, FOOD, WOOD, STONE
-    doubleClickFood = new Upgrade("doubleClickFood", false, 100, 0, 0);
-    doubleClickWood = new Upgrade("doubleClickWood", false, 0, 100, 0);
-    doubleClickStone = new Upgrade("doubleClickStone", false, 0, 0, 100);
 
 
-}
 
-
-// INITIAL LOAD OF RESOURCES ON PAGELOAD
-initializeValues();
-
-// ** HTML ELEMENTS ASSIGNMENT
 
 // BUTTONS
 // RESOURCE BUTTONS
@@ -145,7 +117,41 @@ const farmerDisplay = document.getElementById('farmer__count');
 const lumberjackDisplay = document.getElementById('lumberjack__count');
 const minerDisplay = document.getElementById('miner__count');
 
+const purchasedUpgradeList = document.getElementById("pu_section");
 
+
+
+
+
+// FOR LOADING, RESETS
+function initializeValues(){
+    console.log('initialized');
+    food = new Resource("food", 0, 1);
+    wood = new Resource("wood", 0, 1);
+    stone = new Resource("stone", 0, 1);
+
+    worker = new Worker("worker", 0, 1, 10);
+    farmer = new Worker("farmer", 0, 1);
+    lumberjack = new Worker("lumberjack", 0, 1);
+    miner = new Worker("miner", 0, 1);
+
+    // LOOPS THROUGH EACH KEY IN THE upgradesList OBJECT AND SETS THEM TO FALSE
+    /*
+    Object.keys(upgradesList).forEach(function(key){
+        upgradesList[key] = false;
+    });
+    */
+
+    doubleClickFood = new Upgrade("doubleClickFood", "Double Food per Click", "Each click generates twice as much food", false, 100, 0, 0);
+    doubleClickWood = new Upgrade("doubleClickWood", "Double Wood per Click", "Each click generates twice as much wood", false, 0, 100, 0);
+    doubleClickStone = new Upgrade("doubleClickStone", "Double Stone per Click", "Each click generates twice as much stone", false, 0, 0, 100);
+
+
+}
+
+
+// INITIAL LOAD OF RESOURCES ON PAGELOAD
+initializeValues();
 
 
 
@@ -159,57 +165,7 @@ function addResource(resource){
     updateDisplay();
 }
 
-
-function upgradePurchaseCheck(selectedUpgrade){
-    // compare resource totals vs upgrade totals
-
-    if(selectedUpgrade.foodCost <= food.total 
-        && selectedUpgrade.woodCost <= wood.total
-        && selectedUpgrade.stoneCost <= stone.total){
-            return true;
-    }
-    return false;
-}
-
-// UPGRADES PROCESSOR FUNCTION
-// CHECKS THE TYPE OF UPGRADE AND WHETHER IT CAN BE PURCHASED WITH THE GIVEN RESOURCES
-function upgrade(upgradeButton){
-    console.log("Attempting: " + upgradeButton.id);
-    
-    if(upgradeButton.id === 'doubleclick--food' && upgradePurchaseCheck(doubleClickFood)){
-        food.clickValue = food.clickValue*2;
-        doubleClickFood.active = true;
-        food.total = food.total - 100;
-    }    
-    else if(upgradeButton.id === 'doubleclick--wood' && upgradePurchaseCheck(doubleClickWood)){
-
-        wood.clickValue = wood.clickValue*2;
-        doubleClickWood.active = true;
-        wood.total = wood.total - doubleClickWood.woodCost;
-        console.log("Upgrading wood");
-    }
-    else if(upgradeButton.id === 'doubleclick--stone' && upgradePurchaseCheck(doubleClickStone)){
-        stone.clickValue = stone.clickValue*2;
-        doubleClickStone.active = true;
-        stone.total = stone.total - doubleClickStone.stoneCost;
-        console.log("Upgrading stone");
-    }
-    else{
-        console.log("Not valid resources")
-    }
-
-
-    
-    if(upgradeButton.id === 'doubleclick--stone'){
-        stone.clickValue = stone.clickValue*2;
-        doubleClickStone.active = true;
-    }
-
-    saveData();
-    updateDisplay();
-}
-
-
+/************** DISPLAYS **************/
 
 // UPDATING THE PAGE
 function updateDisplay(){
@@ -230,6 +186,9 @@ function updateTotalsDisplay(){
     lumberjackDisplay.textContent = lumberjack.total;
     minerDisplay.textContent = miner.total;
 }
+
+
+
 
 // THIS FUNCTION WILL CHECK HOW AN UPGRADE BUTTON SHOULD BE DISPLAYED
 // IS IT ACTIVE: HIDDEN
@@ -275,6 +234,7 @@ function updateUpgradesDisplay(){
 
     
 }
+
 // THIS FUNCTION WILL CHECK IF THE WORKERS BUTTONS SHOULD BE ENABLED OR NOT
 function updatePopulationDisplay(){
 
@@ -298,6 +258,101 @@ function updatePopulationDisplay(){
 
 
 }
+
+function updatePurchasedUpgradesDisplay(upgradeList){
+    //console.log(JSON.stringify(upgradeList));
+    // TAKE IN AN OBJECT OBJECT.UPGRADE.NAME
+    // CHECK IF IT IS ENABLED
+    // ADD THE UPGRADE NAME AND DESCRIPTION TO AN EM AND P TAG
+
+    // NEED TO CLEAR OUT OLD INFO FIRST
+    purchasedUpgradeList.innerHTML = "";
+    
+    if(upgradeList){
+        console.log("Displaying Purchased");
+        // GO THROUGH EACH KEY IN THE LIST
+        for (let key in upgradeList) {
+            console.log(key);
+            // ASSIGN THE NESTED JSON TO THE value VARIABLE
+            let value = upgradeList[key];
+            console.log(value.active);
+            if(value.active){
+                const upgElement = document.createElement("p");
+                upgElement.id = "pu__" + value.name.toLowerCase();
+                upgElement.innerHTML = "<strong>" + value.label + "</strong> - " + value.description;
+                purchasedUpgradeList.appendChild(upgElement);
+            }
+
+
+        }
+    }
+    else{
+        console.log("Removing purchased");
+        purchasedUpgradeList.innerHTML = "";
+    }
+    
+    //recurse(upgradeList);
+    //console.log(res);
+
+
+
+}
+
+/************** UPGRADES **************/
+
+// THIS CHECKS IF A SPECIFIC UPGRADE CAN BE PURCHASED
+function upgradePurchaseCheck(selectedUpgrade){
+    // compare resource totals vs upgrade totals
+
+    if(selectedUpgrade.foodCost <= food.total 
+        && selectedUpgrade.woodCost <= wood.total
+        && selectedUpgrade.stoneCost <= stone.total){
+            return true;
+    }
+    return false;
+}
+
+
+// UPGRADES PROCESSOR FUNCTION
+// CHECKS THE TYPE OF UPGRADE AND WHETHER IT CAN BE PURCHASED WITH THE GIVEN RESOURCES
+function upgrade(upgradeButton){
+    console.log("Attempting: " + upgradeButton.id);
+    
+    if(upgradeButton.id === 'doubleclick--food' && upgradePurchaseCheck(doubleClickFood)){
+        food.clickValue = food.clickValue*2;
+        doubleClickFood.active = true;
+        food.total = food.total - 100;
+    }    
+    else if(upgradeButton.id === 'doubleclick--wood' && upgradePurchaseCheck(doubleClickWood)){
+
+        wood.clickValue = wood.clickValue*2;
+        doubleClickWood.active = true;
+        wood.total = wood.total - doubleClickWood.woodCost;
+        console.log("Upgrading wood");
+    }
+    else if(upgradeButton.id === 'doubleclick--stone' && upgradePurchaseCheck(doubleClickStone)){
+        stone.clickValue = stone.clickValue*2;
+        doubleClickStone.active = true;
+        stone.total = stone.total - doubleClickStone.stoneCost;
+        console.log("Upgrading stone");
+    }
+    else{
+        console.log("Not valid resources")
+    }
+
+    let upgradeData = {
+        doubleClickFood:doubleClickFood,
+        doubleClickWood:doubleClickWood,
+        doubleClickStone:doubleClickStone
+    }
+
+    saveData();
+    updateDisplay();
+    updatePurchasedUpgradesDisplay(upgradeData);
+}
+
+
+/************** WORKERS **************/
 
 // WORKKER FUNCTIONS
 function newWorker(num){
@@ -339,7 +394,9 @@ function assignWorker(job, num){
     }
 }
 
-// LOCAL STORAGE SAVING/LOADING/RESET FUNCTIONS
+
+
+/************** LOCAL STORAGE SAVING/LOADING/RESET FUNCTIONS **************/
 
 // SAVING DATA
 function saveData(){
@@ -363,14 +420,6 @@ function saveData(){
         miner:miner
     }
 
-    // DEBUGGING
-    /*
-    console.log("ResourceData: ")
-    console.log(resourceData);
-    console.log("JSON Stringified resourceData");
-    console.log(JSON.stringify(resourceData));
-
-    */
 
 
     try{
@@ -456,8 +505,6 @@ function loadData(){
     }
 
     if(loadedUpgradeData){
-        //upgradesList = JSON.parse(loadedUpgradeData);
-
         convertedUpgradeData = JSON.parse(loadedUpgradeData);
 
         if(doubleClickFood){
@@ -470,6 +517,7 @@ function loadData(){
             doubleClickStone.active = convertedUpgradeData.doubleClickStone.active
         }
 
+        updatePurchasedUpgradesDisplay(convertedUpgradeData);
 
     }
     else{
@@ -477,7 +525,6 @@ function loadData(){
     }
 
     if(loadedWorkerData){
-        console.log(JSON.parse(loadedWorkerData));
         convertedWorkerData = JSON.parse(loadedWorkerData);
 
         if(worker){
@@ -507,23 +554,22 @@ function loadData(){
 
     updateDisplay();
 }
+
 // RESET DATA
 function resetValues(){
 
     console.warn('Reset Triggered, resetting values');
-    
-    initializeValues();
-    clearLocalStorage();
-    updateDisplay();
-
-}
-// DELETE THE LOCALSTORAGE ITEM
-function clearLocalStorage(){
     localStorage.clear();
+    initializeValues();
+    updateDisplay();
+    updatePurchasedUpgradesDisplay();
+    
+
 }
 
 
-// ** EVENT LISTENERS
+
+/************** EVENT LISTENERS **************/
 // RESOURCES
 foodButton.addEventListener("click", function(){
     addResource(food);
@@ -563,6 +609,8 @@ loadData();
 
 
 
+/************** DEVELOPER FUNCTIONS (DONT CHEAT) **************/
+
 function cheat(){
     food.total = 1000*1000;
     wood.total = 1000*1000;
@@ -570,3 +618,25 @@ function cheat(){
 
     updateDisplay();
 }
+
+/* MAGIC LOOP CODE THAT RETURNS NESTED JSON DATA KEYS AND VALUES
+https://www.codegrepper.com/code-examples/javascript/javascript+loop+nested+object
+function nestedLoop(obj) {
+    const res = {};
+    function recurse(obj, current) {
+        for (const key in obj) {
+            let value = obj[key];
+            if(value != undefined) {
+                if (value && typeof value === 'object') {
+                    recurse(value, key);
+                } else {
+                  	// Do your stuff here to var value
+                    res[key] = value;
+                }
+            }
+        }
+    }
+    recurse(obj);
+    return res;
+}
+*/
