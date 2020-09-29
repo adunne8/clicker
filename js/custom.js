@@ -5,6 +5,9 @@ let food;
 let wood;
 let stone;
 
+let empireName;
+let emperorName;
+
 // RESOURCES
 class Resource {
     constructor(name, total, clickValue){
@@ -85,25 +88,26 @@ let miner;
 
 // BUTTONS
 // RESOURCE BUTTONS
-const foodButton = document.getElementById('food__button');
-const woodButton = document.getElementById('wood__button');
-const stoneButton = document.getElementById('stone__button');
+const foodButton = document.getElementById("food__button");
+const woodButton = document.getElementById("wood__button");
+const stoneButton = document.getElementById("stone__button");
 // UPGRADE BUTTONS
 const doubleClickFoodButton = document.getElementById("doubleclick--food");
 const doubleClickWoodButton = document.getElementById("doubleclick--wood");
 const doubleClickStoneButton = document.getElementById("doubleclick--stone");
 
 // WORKER BUTTONS
-const newWorkerButton = document.getElementById('worker__new');
-const newFarmerButton = document.getElementById('worker__farmer');
-const newLumberjackButton = document.getElementById('worker__lumberjack');
-const newMinerButton = document.getElementById('worker__miner');
+const newWorkerButton = document.getElementById("worker__new");
+const newFarmerButton = document.getElementById("worker__farmer");
+const newLumberjackButton = document.getElementById("worker__lumberjack");
+const newMinerButton = document.getElementById("worker__miner");
 
 
-const upgradeButtons = document.querySelectorAll('.upgrade__button');
+const upgradeButtons = document.querySelectorAll(".upgrade__button");
 
 // SYSTEM MANAGEMENT BUTTONS
-const resetButton = document.getElementById('management__reset');
+const resetButton = document.getElementById("management__reset");
+const renameButton = document.getElementById("management__rename");
 
 
 
@@ -118,6 +122,9 @@ const lumberjackDisplay = document.getElementById('lumberjack__count');
 const minerDisplay = document.getElementById('miner__count');
 
 const purchasedUpgradeList = document.getElementById("pu_section");
+
+const empireNameDisplay = document.getElementById("title__name");
+const emperorNameDisplay = document.getElementById("emperor__name");
 
 
 
@@ -271,23 +278,16 @@ function updatePopulationDisplay(){
 
 }
 
+// THIS FUNCTION POPULATES THE LIST OF PURCHASED UPGRADES
 function updatePurchasedUpgradesDisplay(upgradeList){
-    //console.log(JSON.stringify(upgradeList));
-    // TAKE IN AN OBJECT OBJECT.UPGRADE.NAME
-    // CHECK IF IT IS ENABLED
-    // ADD THE UPGRADE NAME AND DESCRIPTION TO AN EM AND P TAG
-
     // NEED TO CLEAR OUT OLD INFO FIRST
     purchasedUpgradeList.innerHTML = "";
     
     if(upgradeList){
-        console.log("Displaying Purchased");
         // GO THROUGH EACH KEY IN THE LIST
         for (let key in upgradeList) {
-            console.log(key);
             // ASSIGN THE NESTED JSON TO THE value VARIABLE
             let value = upgradeList[key];
-            console.log(value.active);
             if(value.active){
                 const upgElement = document.createElement("p");
                 upgElement.id = "pu__" + value.name.toLowerCase();
@@ -298,17 +298,30 @@ function updatePurchasedUpgradesDisplay(upgradeList){
 
         }
     }
-    else{
-        console.log("Removing purchased");
-        purchasedUpgradeList.innerHTML = "";
-    }
-    
-    //recurse(upgradeList);
-    //console.log(res);
 
+    
+
+}
+
+function setCustomItems(convertedGenericData){
+
+    if(convertedGenericData){
+        empireName = convertedGenericData.empireName;
+        emperorName = convertedGenericData.emperorName;
+    }
+    else{
+        empireName = prompt("What is the name of your empire?");
+        emperorName = prompt("What is your name?");
+    }
+
+    empireNameDisplay.textContent = empireName;
+    emperorNameDisplay.textContent = emperorName;
+
+    saveData();
 
 
 }
+
 
 /************** UPGRADES **************/
 
@@ -432,6 +445,10 @@ function saveData(){
         miner:miner
     }
 
+    let genericData = {
+        empireName:empireName,
+        emperorName:emperorName
+    }
 
 
     try{
@@ -441,6 +458,7 @@ function saveData(){
         localStorage.setItem("resourceStorage", JSON.stringify(resourceData));
         localStorage.setItem("upgradeStorage" , JSON.stringify(upgradeData));
         localStorage.setItem("workerStorage", JSON.stringify(workerData));
+        localStorage.setItem("genericStorage", JSON.stringify(genericData));
     }
     catch(error){
         console.error("Error: Cannot set localStorage: " + error);
@@ -457,6 +475,8 @@ function loadData(){
     let convertedUpgradeData;
     let loadedWorkerData;
     let convertedWorkerData;
+    let loadedGenericData;
+    let convertedGenericData;
 
 
     try{
@@ -480,6 +500,12 @@ function loadData(){
     }
     catch(error){
         console.warn("Error: Cannot load worker data: " + error);
+    }
+    try{
+        loadedGenericData = localStorage.getItem("genericStorage");
+    }
+    catch(error){
+        console.warn("Error: Cannot load generic data: " + error);
     }
 
     if(loadedResourceData){
@@ -561,6 +587,14 @@ function loadData(){
     else{
         console.warn("No localStorage for workers found");
     }
+    if(loadedGenericData){
+        convertedGenericData = JSON.parse(loadedGenericData);
+    }
+    else{
+        console.warn("No localStorage for generic info found");
+    }
+    // THIS SHOULD ALWAYS BE RUN, EVEN IF NO DATA IS FOUND
+    setCustomItems(convertedGenericData);
 
     updateUpgradesDisplay();
 
@@ -574,7 +608,8 @@ function resetValues(){
         localStorage.clear();
         initializeValues();
         updateDisplay();
-        updatePurchasedUpgradesDisplay();    
+        updatePurchasedUpgradesDisplay();
+        setCustomItems(null);
     }
 }
 
@@ -615,6 +650,9 @@ upgradeButtons.forEach(function(currentButton){
 
 // SYSTEM
 resetButton.addEventListener("click", resetValues);
+renameButton.addEventListener("click", function(){
+    setCustomItems();
+});
 
 loadData();
 
