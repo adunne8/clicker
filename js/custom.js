@@ -167,6 +167,17 @@ function addResource(resource){
 
 /************** DISPLAYS **************/
 
+// THIS FUNCTION CLEANS UP NUMBERS SO THERE ARE NO FLOATING POINT ERRORS AND NUMBERS CAN BE ROUNDED DOWN
+// WE DONT WANT TO SHOW THE USER HAS MORE RESOURCES THAN THEY ACTUALLY HAVE
+function beautifyNumber(uglyNum, accuracy, roundDown){
+    if(roundDown){
+        return Math.floor(uglyNum);
+    }
+    else{
+        return Number.parseFloat(uglyNum).toFixed(accuracy);
+    }
+}
+
 // UPDATING THE PAGE
 function updateDisplay(){
 
@@ -176,10 +187,11 @@ function updateDisplay(){
 
 }
 // THIS UPDATES THE TOTAL NUMBER OF RESOURCES/WORKERS ETC ON THE SCREEN
+// IF A FLOATING POINT ERROR OCCURS WE WANT TO HIDE THAT
 function updateTotalsDisplay(){
-    foodDisplay.textContent = food.total;
-    woodDisplay.textContent = wood.total;
-    stoneDisplay.textContent = stone.total;
+    foodDisplay.textContent = beautifyNumber(food.total, 0, true);
+    woodDisplay.textContent = beautifyNumber(wood.total, 0, true);
+    stoneDisplay.textContent = beautifyNumber(stone.total, 0, true);
 
     workerDisplay.textContent = worker.total;
     farmerDisplay.textContent = farmer.total;
