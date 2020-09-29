@@ -569,14 +569,13 @@ function loadData(){
 
 // RESET DATA
 function resetValues(){
-
-    console.warn('Reset Triggered, resetting values');
-    localStorage.clear();
-    initializeValues();
-    updateDisplay();
-    updatePurchasedUpgradesDisplay();
-    
-
+    if(confirm("Delete all data?")){
+        console.warn('Reset Triggered, resetting values');
+        localStorage.clear();
+        initializeValues();
+        updateDisplay();
+        updatePurchasedUpgradesDisplay();    
+    }
 }
 
 
@@ -652,3 +651,6 @@ function nestedLoop(obj) {
     return res;
 }
 */
+
+
+
