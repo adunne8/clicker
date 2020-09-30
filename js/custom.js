@@ -690,5 +690,32 @@ function nestedLoop(obj) {
 }
 */
 
+// ASSIGN TIMEOUT TO A VARIABLE SO IT CAN BE CLEARED IF NECCESSARY
+let t = setInterval(intervalCode,1000);
+function intervalCode(){
+    // DEBUGGING FOR CODE EXECUTION TIME
+    var start = new Date().getTime();
+
+    harvest();
+
+    //DEBUGGING - MARK END OF MAIN LOOP AND CALCULATE DELTA IN MILLISECONDS
+	var end = new Date().getTime();
+	var time = end - start;
+	console.log("Main loop execution time: " + time + "ms...Start: " + start + " -> end: " + end);
 
 
+    updateDisplay();
+}
+
+function harvest(){
+    console.log("Harvesting");
+    
+    // COULD THESE BE CLASS FUNCTIONS
+    food.total = food.total + (farmer.total * farmer.effeciency);
+    wood.total = wood.total + (lumberjack.total * lumberjack.effeciency);
+    stone.total = stone.total + (miner.total * miner.effeciency);
+}
+
+function clearInterval(){
+    clearTimeout(t);
+}
