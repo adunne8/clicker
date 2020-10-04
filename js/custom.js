@@ -43,6 +43,10 @@ class Worker {
         }
 
     }
+
+    productivity(){
+        return this.total * this.effeciency;
+    }
 }
 
 // TO BE INVESTIGATED IN THE FUTURE FOR UPGRADE PROCESSING
@@ -690,6 +694,9 @@ function nestedLoop(obj) {
 }
 */
 
+
+/************** INTERVAL FUNCTIONS **************/
+
 // ASSIGN TIMEOUT TO A VARIABLE SO IT CAN BE CLEARED IF NECCESSARY
 let t = setInterval(intervalCode,1000);
 function intervalCode(){
@@ -710,10 +717,11 @@ function intervalCode(){
 function harvest(){
     console.log("Harvesting");
     
+    console.log(farmer.productivity());
     // COULD THESE BE CLASS FUNCTIONS
-    food.total = food.total + (farmer.total * farmer.effeciency);
-    wood.total = wood.total + (lumberjack.total * lumberjack.effeciency);
-    stone.total = stone.total + (miner.total * miner.effeciency);
+    food.total = food.total + (farmer.productivity());
+    wood.total = wood.total + (lumberjack.productivity());
+    stone.total = stone.total + (miner.productivity());
 }
 
 function clearInterval(){
