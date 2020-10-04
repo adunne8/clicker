@@ -715,13 +715,12 @@ function intervalCode(){
 }
 
 function harvest(){
-    console.log("Harvesting");
-    
-    console.log(farmer.productivity());
-    // COULD THESE BE CLASS FUNCTIONS
+
     food.total = food.total + (farmer.productivity());
     wood.total = wood.total + (lumberjack.productivity());
     stone.total = stone.total + (miner.productivity());
+
+    saveData();
 }
 
 function clearInterval(){
