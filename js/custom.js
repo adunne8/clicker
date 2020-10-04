@@ -43,6 +43,10 @@ class Worker {
         }
 
     }
+
+    productivity(){
+        return this.total * this.effeciency;
+    }
 }
 
 // TO BE INVESTIGATED IN THE FUTURE FOR UPGRADE PROCESSING
@@ -691,4 +695,34 @@ function nestedLoop(obj) {
 */
 
 
+/************** INTERVAL FUNCTIONS **************/
 
+// ASSIGN TIMEOUT TO A VARIABLE SO IT CAN BE CLEARED IF NECCESSARY
+let t = setInterval(intervalCode,1000);
+function intervalCode(){
+    // DEBUGGING FOR CODE EXECUTION TIME
+    var start = new Date().getTime();
+
+    harvest();
+
+    //DEBUGGING - MARK END OF MAIN LOOP AND CALCULATE DELTA IN MILLISECONDS
+	var end = new Date().getTime();
+	var time = end - start;
+	console.log("Main loop execution time: " + time + "ms...Start: " + start + " -> end: " + end);
+
+
+    updateDisplay();
+}
+
+function harvest(){
+
+    food.total = food.total + (farmer.productivity());
+    wood.total = wood.total + (lumberjack.productivity());
+    stone.total = stone.total + (miner.productivity());
+
+    saveData();
+}
+
+function clearInterval(){
+    clearTimeout(t);
+}
