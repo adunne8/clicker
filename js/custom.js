@@ -285,7 +285,7 @@ function updatePopulationDisplay(){
 // THIS FUNCTION POPULATES THE LIST OF PURCHASED UPGRADES
 function updatePurchasedUpgradesDisplay(upgradeList){
     // NEED TO CLEAR OUT OLD INFO FIRST
-    purchasedUpgradeList.innerHTML = "";
+    purchasedUpgradeList.innerHTML = "<h1 id='upgrades_heading'>Purchased Upgrades</h1>";
     
     if(upgradeList){
         // GO THROUGH EACH KEY IN THE LIST
@@ -345,28 +345,25 @@ function upgradePurchaseCheck(selectedUpgrade){
 // UPGRADES PROCESSOR FUNCTION
 // CHECKS THE TYPE OF UPGRADE AND WHETHER IT CAN BE PURCHASED WITH THE GIVEN RESOURCES
 function upgrade(upgradeButton){
-    console.log("Attempting: " + upgradeButton.id);
     
     if(upgradeButton.id === 'doubleclick--food' && upgradePurchaseCheck(doubleClickFood)){
         food.clickValue = food.clickValue*2;
         doubleClickFood.active = true;
-        food.total = food.total - 100;
+        food.total = food.total - doubleClickFood.foodCost;
     }    
     else if(upgradeButton.id === 'doubleclick--wood' && upgradePurchaseCheck(doubleClickWood)){
 
         wood.clickValue = wood.clickValue*2;
         doubleClickWood.active = true;
         wood.total = wood.total - doubleClickWood.woodCost;
-        console.log("Upgrading wood");
     }
     else if(upgradeButton.id === 'doubleclick--stone' && upgradePurchaseCheck(doubleClickStone)){
         stone.clickValue = stone.clickValue*2;
         doubleClickStone.active = true;
         stone.total = stone.total - doubleClickStone.stoneCost;
-        console.log("Upgrading stone");
     }
     else{
-        console.log("Not valid resources")
+        console.log("No valid resources")
     }
 
     let upgradeData = {
@@ -387,7 +384,6 @@ function upgrade(upgradeButton){
 function newWorker(num){
 
     if(food.total >= worker.cost*num){
-        console.log("adding worker");
         worker.total = worker.total + num;
         food.total = food.total - worker.cost*num;
     }
@@ -399,21 +395,17 @@ function newWorker(num){
 
 };
 function assignWorker(job, num){
-    console.log("Attempting to assigning " + num + " workers as " + job);
     if (worker.total >= num){
         if(job === farmer.name){
-            console.log("Adding farmer");
             farmer.total = farmer.total + num;
             worker.total = worker.total - num;
         }
         else if (job === lumberjack.name){
-            console.log("Adding lumberjack");
             lumberjack.total = lumberjack.total + num;
             worker.total = worker.total - num;
 
         }
         else if(job === miner.name){
-            console.log("Adding miner");
             miner.total = miner.total + num;
             worker.total = worker.total - num;
 

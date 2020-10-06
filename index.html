@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Empire Clicker</title>
+
     <link rel="stylesheet" href="css/custom.css">
+    
 </head>
 <body>
     <header>
@@ -13,52 +15,64 @@
         <h2 id="emperor">Run by the emperor <span id="emperor__name"></span></h2>
     </header>
 
-    <section id="resource_section" class="panel">
-
-        <div class="resource__row">
-            <button id="food__button">Gather food</button><span>Food: <span id="food__count">0</span>
-        </div>
-        <div class="resource__row">
-            <button id="wood__button">Gather wood</button><span>Wood: <span id="wood__count">0</span>
-        </div>
-        <div class="resource__row">
-            <button id="stone__button">Gather stone</button><span>Stone: <span id="stone__count">0</span>
-        </div>
-
-    </section>
-
-    <section id="upgrade_section" class="panel">
-        <button id="doubleclick--food" class="upgrade__button">Double Food Per Click<br>(100) Food</button>
-        <button id="doubleclick--wood" class="upgrade__button">Double wood Per Click<br>(100) Wood</button>
-        <button id="doubleclick--stone" class="upgrade__button">Double stone Per Click<br>(100) Stone</button>
-    </section>
     
+    <main id="game">
+        <section id="resource_section" class="game__panel">
+            <h1 id="resource__heading">Resources</h1>
 
-    <section id="worker_section">
-        <div class="worker_row">
-            <button id="worker__new" class="worker__button">Add worker</button><span>Workers: <span id="worker__count">0</span>
-        </div>
-        <div class="worker__row">
-            <button id="worker__farmer" class="worker__button">Add farmer</button><span>Farmers: <span id="farmer__count">0</span>
-        </div>
-        <div class="worker__row">
-            <button id="worker__lumberjack" class="worker__button">Add lumberjack</button><span>Lumberjacks: <span id="lumberjack__count">0</span>
+            <div class="resource__row">
+                <button id="food__button">Gather food</button><span>Food: <span id="food__count">0</span>
+            </div>
+            <div class="resource__row">
+                <button id="wood__button">Gather wood</button><span>Wood: <span id="wood__count">0</span>
+            </div>
+            <div class="resource__row">
+                <button id="stone__button">Gather stone</button><span>Stone: <span id="stone__count">0</span>
+            </div>
 
-        </div>
-        <div class="worker__row">
-            <button id="worker__miner" class="worker__button">Add miner</button><span>Food: <span id="miner__count">0</span>
-        </div>
-    </section>
-    
-    <section id="system_section">
-        <button type="button" id="management__reset">Reset</button>
-        <button type="button" id="management__rename">Rename</button>
-    </section>
+        </section>
 
-    <!-- PURCHASED UPGRADES SECTION -->
-    <section id="pu_section">
+        <section id="upgrade_section" class="game__panel">
+            <h1 id="upgrades_heading">Upgrades</h1>
 
-    </section>
+            <button id="doubleclick--food" class="upgrade__button">Double Food Per Click<br>(100) Food</button>
+            <button id="doubleclick--wood" class="upgrade__button">Double wood Per Click<br>(100) Wood</button>
+            <button id="doubleclick--stone" class="upgrade__button">Double stone Per Click<br>(100) Stone</button>
+        </section>
+        
+
+        <section id="worker_section" class="game__panel">
+            <h1 id="worker__heading">Workers</h1>
+
+            <div class="worker_row">
+                <button id="worker__new" class="worker__button">Add worker</button><span>Workers: <span id="worker__count">0</span>
+            </div>
+            <div class="worker__row">
+                <button id="worker__farmer" class="worker__button">Add farmer</button><span>Farmers: <span id="farmer__count">0</span>
+            </div>
+            <div class="worker__row">
+                <button id="worker__lumberjack" class="worker__button">Add lumberjack</button><span>Lumberjacks: <span id="lumberjack__count">0</span>
+
+            </div>
+            <div class="worker__row">
+                <button id="worker__miner" class="worker__button">Add miner</button><span>Food: <span id="miner__count">0</span>
+            </div>
+        </section>
+        
+        <section id="system_section" class="game__panel">
+            <h1 id="system__heading">Game Management</h1>
+
+            <button type="button" id="management__reset">Reset</button>
+            <button type="button" id="management__rename">Rename</button>
+        </section>
+
+        <!-- PURCHASED UPGRADES SECTION -->
+        <section id="pu_section" class="game__panel">
+            <h1 id="pu__heading">Purchased Upgrades</h1>
+            <p>Hello</p>
+
+        </section>
+    </main>
     
     <script src="js/custom.js"></script>
 

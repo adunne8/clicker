@@ -1,3 +1,86 @@
+
+button {
+    border: 1px solid #212121;
+    border-radius: 3px;
+    padding: 5px;
+    font-size: 1.2rem;
+    margin: 5px 0;
+    background-color: #fff;
+    width: auto;
+    cursor: pointer; }
+
+button:hover {
+    background-color: #f0f0f0; 
+}
+
+
+
+
+
+@font-face {
+    font-family: "Lato";
+    src: url("fonts/Lato/Lato-Regular.ttf");
+}
+
+
+
 body{
     background-color: grey;
+    font-family: 'Lato', sans-serif;
+
 }
+
+/*
+#game{
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.game__panel{
+    margin: 15px;
+    padding: 15px;
+    border: 1px solid #333333;
+    border-radius: 3px;
+
+    background-color: #ffffff;
+
+
+    flex-grow: 1;
+    width: 450px;
+}
+*/
+
+#game{
+    /*
+    display: flex;
+    justify-content: space-between;
+    flex-flow: row wrap;
+    */
+
+    display: grid;
+    align-items: stretch;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+.game__panel{
+    /*
+    flex: 1;
+    */
+    margin: 15px;
+    padding: 15px;
+    border: 1px solid #333333;
+    border-radius: 3px;
+
+    background-color: #ffffff;
+    
+}
+
+
+
+
+
+
+
+
+
+
