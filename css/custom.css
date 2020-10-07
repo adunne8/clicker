@@ -21,7 +21,7 @@ button:hover {
 
 @font-face {
     font-family: "Lato";
-    src: url("fonts/Lato/Lato-Regular.ttf");
+    src: url("../fonts/Lato/Lato-Regular.ttf");
 }
 
 
@@ -81,9 +81,16 @@ body{
 .property__display{
     margin: 0 5px;
 }
+.property__increment{
+    margin: 0 5px;
+}
 
-
-
+.property__increment--positive{
+    color: green;
+}
+.property__increment--negative{
+    color: red;
+}
 
 
 

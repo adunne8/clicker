@@ -116,14 +116,18 @@ const renameButton = document.getElementById("management__rename");
 
 
 // DISPLAYS
-const foodDisplay = document.getElementById('food__count');
-const woodDisplay = document.getElementById('wood__count');
-const stoneDisplay = document.getElementById('stone__count');
+const foodDisplay = document.getElementById("food__count");
+const woodDisplay = document.getElementById("wood__count");
+const stoneDisplay = document.getElementById("stone__count");
 
-const workerDisplay = document.getElementById('worker__count');
-const farmerDisplay = document.getElementById('farmer__count');
-const lumberjackDisplay = document.getElementById('lumberjack__count');
-const minerDisplay = document.getElementById('miner__count');
+const foodIncrementDisplay = document.getElementById("food__increment");
+const woodIncrementDisplay = document.getElementById("wood__increment");
+const stoneIncrementDisplay = document.getElementById("stone__increment");
+
+const workerDisplay = document.getElementById("worker__count");
+const farmerDisplay = document.getElementById("farmer__count");
+const lumberjackDisplay = document.getElementById("lumberjack__count");
+const minerDisplay = document.getElementById("miner__count");
 
 const purchasedUpgradeList = document.getElementById("pu_section");
 
@@ -195,6 +199,7 @@ function updateDisplay(){
     updateTotalsDisplay();
     updatePopulationDisplay();
     updateUpgradesDisplay();
+    updateProductivityDisplay();
 
 }
 // THIS UPDATES THE TOTAL NUMBER OF RESOURCES/WORKERS ETC ON THE SCREEN
@@ -204,10 +209,44 @@ function updateTotalsDisplay(){
     woodDisplay.textContent = beautifyNumber(wood.total, 0, true);
     stoneDisplay.textContent = beautifyNumber(stone.total, 0, true);
 
+
+
     workerDisplay.textContent = worker.total;
     farmerDisplay.textContent = farmer.total;
     lumberjackDisplay.textContent = lumberjack.total;
     minerDisplay.textContent = miner.total;
+}
+
+// THIS FUNCTION SETS THE VALUES AND COLOUR OF THE RESOURCE BEING GENERATED EACH SECOND
+function updateProductivityDisplay(){
+    foodIncrementDisplay.textContent = farmer.productivity();
+    woodIncrementDisplay.textContent = lumberjack.productivity();
+    stoneIncrementDisplay.textContent = miner.productivity();
+
+    if(farmer.productivity() > 0){
+        foodIncrementDisplay.classList.remove("property__increment--negative");
+        foodIncrementDisplay.classList.add("property__increment--positive");
+    }
+    else if(farmer.productivity() < 0){
+        foodIncrementDisplay.classList.remove("property__increment--positive");
+        foodIncrementDisplay.classList.add("property__increment--negative");
+    }
+    if(lumberjack.productivity() > 0){
+        woodIncrementDisplay.classList.remove("property__increment--negative");
+        woodIncrementDisplay.classList.add("property__increment--positive");
+    }
+    else if(lumberjack.productivity() < 0){
+        woodIncrementDisplay.classList.remove("property__increment--positive");
+        woodIncrementDisplay.classList.add("property__increment--negative");
+    }
+    if(miner.productivity() > 0){
+        stoneIncrementDisplay.classList.remove("property__increment--negative");
+        stoneIncrementDisplay.classList.add("property__increment--positive");
+    }
+    else if(miner.productivity() < 0){
+        stoneIncrementDisplay.classList.remove("property__increment--positive");
+        stoneIncrementDisplay.classList.add("property__increment--negative");
+    }
 }
 
 
