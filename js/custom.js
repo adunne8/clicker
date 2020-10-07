@@ -72,19 +72,55 @@ class Upgrade{
     
 
 }
+/*
+class Building{
+    constructor(name, total, foodCost, woodCost, stoneCost, foodStorage, woodStorage, stoneStorage){
+        this.name = name,
+        this.total = total,
+        this.foodCost = foodCost,
+        this.woodCost = woodCost,
+        this.stoneCost = stoneCost,
+
+    }
+
+}
+*/
+
+class Building{
+    constructor(definition){
+        this.name = definition.name,
+        this.total = definition.total,
+        this.foodCost = definition.foodCost,
+        this.woodCost = definition.woodCost,
+        this.stoneCost = definition.stoneCost,
+        this.foodStorage = definition.foodStorage,
+        this.woodStorage = definition.woodStorage,
+        this.stoneStorage = definition.stoneStorage,
+        this.workerStorage = definition.workerStorage
+    }
+}
 
 
-
+// INITIALISE UPGRADES
 let doubleClickFood;
 let doubleClickWood;
 let doubleClickStone;
 
+// INITIALISE WORKERS
 let worker;
 let farmer;
 let lumberjack;
 let miner;
 
+// INITIALISE BUILDINGS
 
+let barn;
+let lumberyard;
+let stoneyard;
+
+let barnParams;
+let lumberyardParams;
+let stoneyardParms;
 
 
 
@@ -160,8 +196,35 @@ function initializeValues(){
     doubleClickFood = new Upgrade("doubleClickFood", "Double Food per Click", "Each click generates twice as much food", false, 100, 0, 0);
     doubleClickWood = new Upgrade("doubleClickWood", "Double Wood per Click", "Each click generates twice as much wood", false, 0, 100, 0);
     doubleClickStone = new Upgrade("doubleClickStone", "Double Stone per Click", "Each click generates twice as much stone", false, 0, 0, 100);
+    /*
+    barn = new Building("Barn", 0, 80, 20);
+    lumberyard = new Building("Lumberyard", 0, 80, 20);
+    stoneyard = new Building("Stoneyard", 0, 80, 20);
+    */
 
+    barnParams = {
+        name: "Barn",
+        woodCost: 80,
+        stoneCost: 20,
+        foodStorage: 100
+    };
+    lumberyardParams = {
+        name: "Lumberyard",
+        woodCost: 80,
+        stoneCost: 20,
+        woodStorage: 100
+    };
+    stoneyardParms = {
+        name: "Stoneyard",
+        woodCost: 80,
+        stoneCost: 20,
+        stoneStorage: 100
+    };
+    barn = new Building(barnParams);
+    lumberyard = new Building(lumberyardParams);
+    stoneyard = new Building(stoneyardParms);
 
+    
 }
 
 
@@ -738,8 +801,10 @@ function intervalCode(){
 
     //DEBUGGING - MARK END OF MAIN LOOP AND CALCULATE DELTA IN MILLISECONDS
 	var end = new Date().getTime();
-	var time = end - start;
-	console.log("Main loop execution time: " + time + "ms...Start: " + start + " -> end: " + end);
+    var time = end - start;
+    
+    // FOR TIMING DEBUGGING
+	//console.log("Main loop execution time: " + time + "ms...Start: " + start + " -> end: " + end);
 
 
     updateDisplay();
