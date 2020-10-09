@@ -154,6 +154,10 @@ const foodDisplay = document.getElementById("food__count");
 const woodDisplay = document.getElementById("wood__count");
 const stoneDisplay = document.getElementById("stone__count");
 
+const foodMaxDisplay = document.getElementById("food__max");
+const woodMaxDisplay = document.getElementById("wood__max");
+const stoneMaxDisplay = document.getElementById("stone__max");
+
 const foodIncrementDisplay = document.getElementById("food__increment");
 const woodIncrementDisplay = document.getElementById("wood__increment");
 const stoneIncrementDisplay = document.getElementById("stone__increment");
@@ -275,7 +279,9 @@ function updateTotalsDisplay(){
     woodDisplay.textContent = beautifyNumber(wood.total, 0, true);
     stoneDisplay.textContent = beautifyNumber(stone.total, 0, true);
 
-
+    foodMaxDisplay.textContent = barn.total * barn.foodStorage;
+    woodMaxDisplay.textContent = lumberyard.total * lumberyard.woodStorage;
+    stoneMaxDisplay.textContent = stoneyard.total * stoneyard.stoneStorage;
 
     workerDisplay.textContent = worker.total;
     farmerDisplay.textContent = farmer.total;
@@ -845,6 +851,11 @@ function nestedLoop(obj) {
 
 // ASSIGN TIMEOUT TO A VARIABLE SO IT CAN BE CLEARED IF NECCESSARY
 let t = setInterval(intervalCode,1000);
+
+function clearInterval(){
+    clearTimeout(t);
+}
+
 function intervalCode(){
     // DEBUGGING FOR CODE EXECUTION TIME
     var start = new Date().getTime();
@@ -876,8 +887,4 @@ function harvest(){
     
 
     saveData();
-}
-
-function clearInterval(){
-    clearTimeout(t);
 }
