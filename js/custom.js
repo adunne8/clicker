@@ -93,6 +93,7 @@ class Building{
         this.foodCost = definition.foodCost,
         this.woodCost = definition.woodCost,
         this.stoneCost = definition.stoneCost,
+
         this.foodStorage = definition.foodStorage,
         this.woodStorage = definition.woodStorage,
         this.stoneStorage = definition.stoneStorage,
@@ -118,9 +119,6 @@ let barn;
 let lumberyard;
 let stoneyard;
 
-let barnParams;
-let lumberyardParams;
-let stoneyardParms;
 
 
 
@@ -202,23 +200,26 @@ function initializeValues(){
     stoneyard = new Building("Stoneyard", 0, 80, 20);
     */
 
-    barnParams = {
+    let barnParams = {
         name: "Barn",
         woodCost: 80,
         stoneCost: 20,
-        foodStorage: 100
+        foodStorage: 200,
+        total: 1
     };
-    lumberyardParams = {
+    let lumberyardParams = {
         name: "Lumberyard",
         woodCost: 80,
         stoneCost: 20,
-        woodStorage: 100
+        woodStorage: 200,
+        total: 1
     };
-    stoneyardParms = {
+    let stoneyardParms = {
         name: "Stoneyard",
         woodCost: 80,
         stoneCost: 20,
-        stoneStorage: 100
+        stoneStorage: 200,
+        total: 1
     };
     barn = new Building(barnParams);
     lumberyard = new Building(lumberyardParams);
@@ -236,11 +237,13 @@ initializeValues();
 // ADDING RESOURCES - FOOD, STONE, WOOD
 function addResource(resource){
     // ADDS 1 RESOURCE TO THE CLICKED RESOURCE
-    resource.total = resource.total + resource.clickValue;
+    if(storageCheck(resource, resource.clickValue)){
+        resource.total = resource.total + resource.clickValue;
 
-    // UPDATE LOCAL STORAGE AND DISPLAYS
-    saveData();
-    updateDisplay();
+        // UPDATE LOCAL STORAGE AND DISPLAYS
+        saveData();
+        updateDisplay();
+    }
 }
 
 /************** DISPLAYS **************/
@@ -517,6 +520,55 @@ function assignWorker(job, num){
     }
 }
 
+/************** BUILDINGS **************/
+
+// THIS FUNCTION CHECKS IF THERE IS STORAGE AVAILABLE TO ADD THE RESOURCE/WROKER TO
+function storageCheck(resourceType, amount){
+    let storageType;
+    if(resourceType === worker){
+        console.log("Checking Houses");
+        //storageType = house
+    }
+    else if(resourceType === food){
+        console.log("Checking Food");
+        storageType = barn;
+
+        if((barn.total * barn.foodStorage) - food.total >= amount){
+            return true;
+        }
+        return false;
+    }
+    else if(resourceType === wood){
+        console.log("Checking Wood");
+        storageType = lumberyard;
+
+        if((lumberyard.total * lumberyard.woodStorage) - wood.total >= amount){
+            return true;
+        }
+        return false;
+    }
+    else if(resourceType === stone){
+        console.log("Checking stone");
+        storageType = stoneyard;
+        if((stoneyard.total * stoneyard.stoneStorage) - stone.total >= amount){
+            return true;
+        }
+        return false;
+    }
+    // NEED TO ENSURE NO INVALID TYPE IS PASSED IN
+    else{
+        console.error("Invalid resource type: " + resourceType);
+        return false;
+    }
+
+    
+
+
+
+
+}
+
+storageCheck(food);
 
 
 /************** LOCAL STORAGE SAVING/LOADING/RESET FUNCTIONS **************/
