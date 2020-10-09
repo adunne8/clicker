@@ -864,9 +864,16 @@ function intervalCode(){
 
 function harvest(){
 
-    food.total = food.total + (farmer.productivity());
-    wood.total = wood.total + (lumberjack.productivity());
-    stone.total = stone.total + (miner.productivity());
+    if(storageCheck(food, farmer.productivity())){
+        food.total = food.total + farmer.productivity();
+    }
+    if(storageCheck(wood, lumberjack.productivity())){
+        wood.total = wood.total + lumberjack.productivity();
+    }
+    if(storageCheck(stone, miner.productivity())){
+        stone.total = stone.total + miner.productivity();
+    }
+    
 
     saveData();
 }
