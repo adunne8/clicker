@@ -167,6 +167,10 @@ const farmerDisplay = document.getElementById("farmer__count");
 const lumberjackDisplay = document.getElementById("lumberjack__count");
 const minerDisplay = document.getElementById("miner__count");
 
+const barnDisplay = document.getElementById("barn__count");
+const lumberyardDisplay = document.getElementById("lumberyard__count");
+const stoneyardDisplay = document.getElementById("stoneyard__count");
+
 const purchasedUpgradeList = document.getElementById("pu_section");
 
 const empireNameDisplay = document.getElementById("title__name");
@@ -287,6 +291,13 @@ function updateTotalsDisplay(){
     farmerDisplay.textContent = farmer.total;
     lumberjackDisplay.textContent = lumberjack.total;
     minerDisplay.textContent = miner.total;
+
+
+    barnDisplay.textContent = barn.total;
+    lumberyardDisplay.textContent = lumberyard.total;
+    stoneyardDisplay.textContent = stoneyard.total;
+
+
 }
 
 // THIS FUNCTION SETS THE VALUES AND COLOUR OF THE RESOURCE BEING GENERATED EACH SECOND
@@ -528,6 +539,11 @@ function assignWorker(job, num){
 
 /************** BUILDINGS **************/
 
+function newBuilding(type){
+    console.log(type);
+}
+
+
 // THIS FUNCTION CHECKS IF THERE IS STORAGE AVAILABLE TO ADD THE RESOURCE/WROKER TO
 function storageCheck(resourceType, amount){
     let storageType;
@@ -566,12 +582,6 @@ function storageCheck(resourceType, amount){
         console.error("Invalid resource type: " + resourceType);
         return false;
     }
-
-    
-
-
-
-
 }
 
 storageCheck(food);
