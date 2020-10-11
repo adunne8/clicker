@@ -99,6 +99,20 @@ class Building{
         this.stoneStorage = definition.stoneStorage,
         this.workerStorage = definition.workerStorage
     }
+
+    canPurchaseBuilding(num){
+        if((this.foodCost * num) <= food.total && (this.woodCost * num) <= wood.total && (this.stoneCost * num) <= stone.total){
+            console.log(this.foodCost + " " + food.total  + " " +  this.woodCost  + " " +  wood.total  + " " +  this.stoneCost  + " " +  stone.total)
+            return true;
+        }
+    }
+    purchaseBuilding(num){
+        food.total -= this.foodCost * num;
+        wood.total -= this.woodCost * num;
+        stone.total -= this.stoneCost * num;
+
+        this.total += num;
+    }
 }
 
 
@@ -140,6 +154,10 @@ const newFarmerButton = document.getElementById("worker__farmer");
 const newLumberjackButton = document.getElementById("worker__lumberjack");
 const newMinerButton = document.getElementById("worker__miner");
 
+// BUILDING BUTTONS
+const newBarnButton = document.getElementById("build_barn");
+const newLumberyardButton = document.getElementById("build_lumberyard");
+const newStoneyardButton = document.getElementById("build_stoneyard");
 
 const upgradeButtons = document.querySelectorAll(".upgrade__button");
 
@@ -210,6 +228,7 @@ function initializeValues(){
 
     let barnParams = {
         name: "Barn",
+        foodCost: 0,
         woodCost: 80,
         stoneCost: 20,
         foodStorage: 200,
@@ -217,6 +236,7 @@ function initializeValues(){
     };
     let lumberyardParams = {
         name: "Lumberyard",
+        foodCost: 0,
         woodCost: 80,
         stoneCost: 20,
         woodStorage: 200,
@@ -224,6 +244,7 @@ function initializeValues(){
     };
     let stoneyardParms = {
         name: "Stoneyard",
+        foodCost: 0,
         woodCost: 80,
         stoneCost: 20,
         stoneStorage: 200,
@@ -291,7 +312,6 @@ function updateTotalsDisplay(){
     farmerDisplay.textContent = farmer.total;
     lumberjackDisplay.textContent = lumberjack.total;
     minerDisplay.textContent = miner.total;
-
 
     barnDisplay.textContent = barn.total;
     lumberyardDisplay.textContent = lumberyard.total;
@@ -402,6 +422,11 @@ function updatePopulationDisplay(){
     }
 
 
+}
+
+
+function updateBuildingsDisplay(){
+    
 }
 
 // THIS FUNCTION POPULATES THE LIST OF PURCHASED UPGRADES
@@ -539,9 +564,16 @@ function assignWorker(job, num){
 
 /************** BUILDINGS **************/
 
-function newBuilding(type){
-    console.log(type);
+function newBuilding(type, num){
+    if(type.canPurchaseBuilding(num)){
+        type.purchaseBuilding(num);
+        console.log("Adding " + type.name);
+        updateDisplay();
+    }
+
 }
+
+
 
 
 // THIS FUNCTION CHECKS IF THERE IS STORAGE AVAILABLE TO ADD THE RESOURCE/WROKER TO
@@ -552,7 +584,7 @@ function storageCheck(resourceType, amount){
         //storageType = house
     }
     else if(resourceType === food){
-        console.log("Checking Food");
+        //console.log("Checking Food");
         storageType = barn;
 
         if((barn.total * barn.foodStorage) - food.total >= amount){
@@ -561,7 +593,7 @@ function storageCheck(resourceType, amount){
         return false;
     }
     else if(resourceType === wood){
-        console.log("Checking Wood");
+        //console.log("Checking Wood");
         storageType = lumberyard;
 
         if((lumberyard.total * lumberyard.woodStorage) - wood.total >= amount){
@@ -570,7 +602,7 @@ function storageCheck(resourceType, amount){
         return false;
     }
     else if(resourceType === stone){
-        console.log("Checking stone");
+        //console.log("Checking stone");
         storageType = stoneyard;
         if((stoneyard.total * stoneyard.stoneStorage) - stone.total >= amount){
             return true;
@@ -806,6 +838,18 @@ newLumberjackButton.addEventListener("click", function(){
 newMinerButton.addEventListener("click", function(){
     assignWorker(miner.name, 1);
 });
+
+// BUILDINGS
+newBarnButton.addEventListener("click", function(){
+    newBuilding(barn, 1);
+});
+newLumberyardButton.addEventListener("click", function(){
+    newBuilding(lumberyard, 1);
+});
+newStoneyardButton.addEventListener("click", function(){
+    newBuilding(stoneyard, 1);
+});
+
 
 // UPGRADES
 upgradeButtons.forEach(function(currentButton){
