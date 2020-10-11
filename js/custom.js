@@ -72,18 +72,66 @@ class Upgrade{
     
 
 }
+/*
+class Building{
+    constructor(name, total, foodCost, woodCost, stoneCost, foodStorage, woodStorage, stoneStorage){
+        this.name = name,
+        this.total = total,
+        this.foodCost = foodCost,
+        this.woodCost = woodCost,
+        this.stoneCost = stoneCost,
+
+    }
+
+}
+*/
+
+class Building{
+    constructor(definition){
+        this.name = definition.name,
+        this.total = definition.total,
+        this.foodCost = definition.foodCost,
+        this.woodCost = definition.woodCost,
+        this.stoneCost = definition.stoneCost,
+
+        this.foodStorage = definition.foodStorage,
+        this.woodStorage = definition.woodStorage,
+        this.stoneStorage = definition.stoneStorage,
+        this.workerStorage = definition.workerStorage
+    }
+
+    canPurchaseBuilding(num){
+        if((this.foodCost * num) <= food.total && (this.woodCost * num) <= wood.total && (this.stoneCost * num) <= stone.total){
+            console.log(this.foodCost + " " + food.total  + " " +  this.woodCost  + " " +  wood.total  + " " +  this.stoneCost  + " " +  stone.total)
+            return true;
+        }
+    }
+    purchaseBuilding(num){
+        food.total -= this.foodCost * num;
+        wood.total -= this.woodCost * num;
+        stone.total -= this.stoneCost * num;
+
+        this.total += num;
+    }
+}
 
 
-
+// INITIALISE UPGRADES
 let doubleClickFood;
 let doubleClickWood;
 let doubleClickStone;
 
+// INITIALISE WORKERS
 let worker;
 let farmer;
 let lumberjack;
 let miner;
 
+// INITIALISE BUILDINGS
+
+let barn;
+let lumberyard;
+let stoneyard;
 
 
 
@@ -106,6 +154,10 @@ const newFarmerButton = document.getElementById("worker__farmer");
 const newLumberjackButton = document.getElementById("worker__lumberjack");
 const newMinerButton = document.getElementById("worker__miner");
 
+// BUILDING BUTTONS
+const newBarnButton = document.getElementById("build_barn");
+const newLumberyardButton = document.getElementById("build_lumberyard");
+const newStoneyardButton = document.getElementById("build_stoneyard");
 
 const upgradeButtons = document.querySelectorAll(".upgrade__button");
 
@@ -116,14 +168,26 @@ const renameButton = document.getElementById("management__rename");
 
 
 // DISPLAYS
-const foodDisplay = document.getElementById('food__count');
-const woodDisplay = document.getElementById('wood__count');
-const stoneDisplay = document.getElementById('stone__count');
+const foodDisplay = document.getElementById("food__count");
+const woodDisplay = document.getElementById("wood__count");
+const stoneDisplay = document.getElementById("stone__count");
 
-const workerDisplay = document.getElementById('worker__count');
-const farmerDisplay = document.getElementById('farmer__count');
-const lumberjackDisplay = document.getElementById('lumberjack__count');
-const minerDisplay = document.getElementById('miner__count');
+const foodMaxDisplay = document.getElementById("food__max");
+const woodMaxDisplay = document.getElementById("wood__max");
+const stoneMaxDisplay = document.getElementById("stone__max");
+
+const foodIncrementDisplay = document.getElementById("food__increment");
+const woodIncrementDisplay = document.getElementById("wood__increment");
+const stoneIncrementDisplay = document.getElementById("stone__increment");
+
+const workerDisplay = document.getElementById("worker__count");
+const farmerDisplay = document.getElementById("farmer__count");
+const lumberjackDisplay = document.getElementById("lumberjack__count");
+const minerDisplay = document.getElementById("miner__count");
+
+const barnDisplay = document.getElementById("barn__count");
+const lumberyardDisplay = document.getElementById("lumberyard__count");
+const stoneyardDisplay = document.getElementById("stoneyard__count");
 
 const purchasedUpgradeList = document.getElementById("pu_section");
 
@@ -156,8 +220,41 @@ function initializeValues(){
     doubleClickFood = new Upgrade("doubleClickFood", "Double Food per Click", "Each click generates twice as much food", false, 100, 0, 0);
     doubleClickWood = new Upgrade("doubleClickWood", "Double Wood per Click", "Each click generates twice as much wood", false, 0, 100, 0);
     doubleClickStone = new Upgrade("doubleClickStone", "Double Stone per Click", "Each click generates twice as much stone", false, 0, 0, 100);
+    /*
+    barn = new Building("Barn", 0, 80, 20);
+    lumberyard = new Building("Lumberyard", 0, 80, 20);
+    stoneyard = new Building("Stoneyard", 0, 80, 20);
+    */
 
+    let barnParams = {
+        name: "Barn",
+        foodCost: 0,
+        woodCost: 80,
+        stoneCost: 20,
+        foodStorage: 200,
+        total: 1
+    };
+    let lumberyardParams = {
+        name: "Lumberyard",
+        foodCost: 0,
+        woodCost: 80,
+        stoneCost: 20,
+        woodStorage: 200,
+        total: 1
+    };
+    let stoneyardParms = {
+        name: "Stoneyard",
+        foodCost: 0,
+        woodCost: 80,
+        stoneCost: 20,
+        stoneStorage: 200,
+        total: 1
+    };
+    barn = new Building(barnParams);
+    lumberyard = new Building(lumberyardParams);
+    stoneyard = new Building(stoneyardParms);
 
+    
 }
 
 
@@ -169,11 +266,13 @@ initializeValues();
 // ADDING RESOURCES - FOOD, STONE, WOOD
 function addResource(resource){
     // ADDS 1 RESOURCE TO THE CLICKED RESOURCE
-    resource.total = resource.total + resource.clickValue;
+    if(storageCheck(resource, resource.clickValue)){
+        resource.total = resource.total + resource.clickValue;
 
-    // UPDATE LOCAL STORAGE AND DISPLAYS
-    saveData();
-    updateDisplay();
+        // UPDATE LOCAL STORAGE AND DISPLAYS
+        saveData();
+        updateDisplay();
+    }
 }
 
 /************** DISPLAYS **************/
@@ -195,6 +294,7 @@ function updateDisplay(){
     updateTotalsDisplay();
     updatePopulationDisplay();
     updateUpgradesDisplay();
+    updateProductivityDisplay();
 
 }
 // THIS UPDATES THE TOTAL NUMBER OF RESOURCES/WORKERS ETC ON THE SCREEN
@@ -204,10 +304,52 @@ function updateTotalsDisplay(){
     woodDisplay.textContent = beautifyNumber(wood.total, 0, true);
     stoneDisplay.textContent = beautifyNumber(stone.total, 0, true);
 
+    foodMaxDisplay.textContent = barn.total * barn.foodStorage;
+    woodMaxDisplay.textContent = lumberyard.total * lumberyard.woodStorage;
+    stoneMaxDisplay.textContent = stoneyard.total * stoneyard.stoneStorage;
+
     workerDisplay.textContent = worker.total;
     farmerDisplay.textContent = farmer.total;
     lumberjackDisplay.textContent = lumberjack.total;
     minerDisplay.textContent = miner.total;
+
+    barnDisplay.textContent = barn.total;
+    lumberyardDisplay.textContent = lumberyard.total;
+    stoneyardDisplay.textContent = stoneyard.total;
+
+
+}
+
+// THIS FUNCTION SETS THE VALUES AND COLOUR OF THE RESOURCE BEING GENERATED EACH SECOND
+function updateProductivityDisplay(){
+    foodIncrementDisplay.textContent = farmer.productivity();
+    woodIncrementDisplay.textContent = lumberjack.productivity();
+    stoneIncrementDisplay.textContent = miner.productivity();
+
+    if(farmer.productivity() > 0){
+        foodIncrementDisplay.classList.remove("property__increment--negative");
+        foodIncrementDisplay.classList.add("property__increment--positive");
+    }
+    else if(farmer.productivity() < 0){
+        foodIncrementDisplay.classList.remove("property__increment--positive");
+        foodIncrementDisplay.classList.add("property__increment--negative");
+    }
+    if(lumberjack.productivity() > 0){
+        woodIncrementDisplay.classList.remove("property__increment--negative");
+        woodIncrementDisplay.classList.add("property__increment--positive");
+    }
+    else if(lumberjack.productivity() < 0){
+        woodIncrementDisplay.classList.remove("property__increment--positive");
+        woodIncrementDisplay.classList.add("property__increment--negative");
+    }
+    if(miner.productivity() > 0){
+        stoneIncrementDisplay.classList.remove("property__increment--negative");
+        stoneIncrementDisplay.classList.add("property__increment--positive");
+    }
+    else if(miner.productivity() < 0){
+        stoneIncrementDisplay.classList.remove("property__increment--positive");
+        stoneIncrementDisplay.classList.add("property__increment--negative");
+    }
 }
 
 
@@ -280,6 +422,11 @@ function updatePopulationDisplay(){
     }
 
 
+}
+
+
+function updateBuildingsDisplay(){
+    
 }
 
 // THIS FUNCTION POPULATES THE LIST OF PURCHASED UPGRADES
@@ -415,6 +562,62 @@ function assignWorker(job, num){
     }
 }
 
+/************** BUILDINGS **************/
+
+function newBuilding(type, num){
+    if(type.canPurchaseBuilding(num)){
+        type.purchaseBuilding(num);
+        console.log("Adding " + type.name);
+        saveData();
+        updateDisplay();
+    }
+
+}
+
+
+
+
+// THIS FUNCTION CHECKS IF THERE IS STORAGE AVAILABLE TO ADD THE RESOURCE/WROKER TO
+function storageCheck(resourceType, amount){
+    let storageType;
+    if(resourceType === worker){
+        console.log("Checking Houses");
+        //storageType = house
+    }
+    else if(resourceType === food){
+        //console.log("Checking Food");
+        storageType = barn;
+
+        if((barn.total * barn.foodStorage) - food.total >= amount){
+            return true;
+        }
+        return false;
+    }
+    else if(resourceType === wood){
+        //console.log("Checking Wood");
+        storageType = lumberyard;
+
+        if((lumberyard.total * lumberyard.woodStorage) - wood.total >= amount){
+            return true;
+        }
+        return false;
+    }
+    else if(resourceType === stone){
+        //console.log("Checking stone");
+        storageType = stoneyard;
+        if((stoneyard.total * stoneyard.stoneStorage) - stone.total >= amount){
+            return true;
+        }
+        return false;
+    }
+    // NEED TO ENSURE NO INVALID TYPE IS PASSED IN
+    else{
+        console.error("Invalid resource type: " + resourceType);
+        return false;
+    }
+}
+
+storageCheck(food);
 
 
 /************** LOCAL STORAGE SAVING/LOADING/RESET FUNCTIONS **************/
@@ -441,6 +644,12 @@ function saveData(){
         miner:miner
     }
 
+    let buildingData = {
+        barn:barn,
+        lumberyard:lumberyard,
+        stoneyard:stoneyard
+    }
+
     let genericData = {
         empireName:empireName,
         emperorName:emperorName
@@ -454,7 +663,9 @@ function saveData(){
         localStorage.setItem("resourceStorage", JSON.stringify(resourceData));
         localStorage.setItem("upgradeStorage" , JSON.stringify(upgradeData));
         localStorage.setItem("workerStorage", JSON.stringify(workerData));
+        localStorage.setItem("buildingStorage", JSON.stringify(buildingData));
         localStorage.setItem("genericStorage", JSON.stringify(genericData));
+        
     }
     catch(error){
         console.error("Error: Cannot set localStorage: " + error);
@@ -471,6 +682,8 @@ function loadData(){
     let convertedUpgradeData;
     let loadedWorkerData;
     let convertedWorkerData;
+    let loadedBuildingData;
+    let convertedBuildingData;
     let loadedGenericData;
     let convertedGenericData;
 
@@ -498,103 +711,124 @@ function loadData(){
         console.warn("Error: Cannot load worker data: " + error);
     }
     try{
+        loadedBuildingData = localStorage.getItem("buildingStorage");
+    }
+    catch(error){
+        console.warn("Error: Cannot load building data: " + error);
+    }
+    try{
         loadedGenericData = localStorage.getItem("genericStorage");
     }
     catch(error){
         console.warn("Error: Cannot load generic data: " + error);
     }
+    
+    try{
+        if(loadedResourceData){
+            // THIS LOADS UP THE STORED DATA AND "UN-STRINGIFIES" BACK INTO AN OBJECT:
+            // RESOURCE.PROPERTY.VALUE
+            convertedResourceData = JSON.parse(loadedResourceData);
+            //console.log("convertedResourceData: ")
+            // console.log(convertedResourceData);
+            
+            // FOOD DATA
+            if(convertedResourceData.food.total != null){
+                food.total = convertedResourceData.food.total;
+            }
+            if(convertedResourceData.food.clickValue != null){
+                food.clickValue = convertedResourceData.food.clickValue;
+            }
+            // WOOD DATA
+            if(convertedResourceData.wood.total != null){
+                wood.total = convertedResourceData.wood.total;
+            }
+            if(convertedResourceData.wood.clickValue != null){
+                wood.clickValue = convertedResourceData.wood.clickValue;
+            }
+            // STONE DATA
+            if(convertedResourceData.stone.total != null){
+                stone.total = convertedResourceData.stone.total;
+            }
+            if(convertedResourceData.stone.clickValue != null){
+                stone.clickValue = convertedResourceData.stone.clickValue;
+            }
 
-    if(loadedResourceData){
-        // THIS LOADS UP THE STORED DATA AND "UN-STRINGIFIES" BACK INTO AN OBJECT:
-        // RESOURCE.PROPERTY.VALUE
-        convertedResourceData = JSON.parse(loadedResourceData);
-        //console.log("convertedResourceData: ")
-        // console.log(convertedResourceData);
-        
-        // FOOD DATA
-        if(convertedResourceData.food.total != null){
-            food.total = convertedResourceData.food.total;
         }
-        if(convertedResourceData.food.clickValue != null){
-            food.clickValue = convertedResourceData.food.clickValue;
-        }
-        // WOOD DATA
-        if(convertedResourceData.wood.total != null){
-            wood.total = convertedResourceData.wood.total;
-        }
-        if(convertedResourceData.wood.clickValue != null){
-            wood.clickValue = convertedResourceData.wood.clickValue;
-        }
-        // STONE DATA
-        if(convertedResourceData.stone.total != null){
-            stone.total = convertedResourceData.stone.total;
-        }
-        if(convertedResourceData.stone.clickValue != null){
-            stone.clickValue = convertedResourceData.stone.clickValue;
+        else{
+            console.warn("No localStorage for resources found");
         }
 
+        if(loadedUpgradeData){
+            convertedUpgradeData = JSON.parse(loadedUpgradeData);
+
+            if(doubleClickFood){
+                doubleClickFood.active = convertedUpgradeData.doubleClickFood.active;
+            }
+            if(doubleClickWood){
+                doubleClickWood.active = convertedUpgradeData.doubleClickWood.active;
+            }
+            if(doubleClickStone){
+                doubleClickStone.active = convertedUpgradeData.doubleClickStone.active
+            }
+
+            updatePurchasedUpgradesDisplay(convertedUpgradeData);
+
+        }
+        else{
+            console.warn("No localStorage for upgrades found");
+        }
+
+        if(loadedWorkerData){
+            convertedWorkerData = JSON.parse(loadedWorkerData);
+
+            if(convertedWorkerData.worker){
+                worker.total = convertedWorkerData.worker.total;
+                worker.cost = convertedWorkerData.worker.cost;
+            }
+            if(convertedWorkerData.farmer){
+                farmer.total = convertedWorkerData.farmer.total;
+                farmer.effeciency = convertedWorkerData.farmer.effeciency;
+            }
+            if(convertedWorkerData.lumberjack){
+                lumberjack.total = convertedWorkerData.lumberjack.total;
+                lumberjack.effeciency = convertedWorkerData.lumberjack.effeciency;
+            }
+            if(convertedWorkerData.miner){
+                miner.total = convertedWorkerData.miner.total;
+                miner.effeciency = convertedWorkerData.miner.effeciency;
+            }
+
+            
+        }
+        else{
+            console.warn("No localStorage for workers found");
+        }
+        if(loadedBuildingData){
+            convertedBuildingData = JSON.parse(loadedBuildingData);
+
+            barn.total = convertedBuildingData.barn.total;
+            lumberyard.total = convertedBuildingData.lumberyard.total;
+            stoneyard.total = convertedBuildingData.stoneyard.total;
+        }
+        else{
+            console.warn("No localstorage for buildings found");
+        }
+        if(loadedGenericData){
+            convertedGenericData = JSON.parse(loadedGenericData);
+        }
+        else{
+            console.warn("No localStorage for generic info found");
+        }
+        // THIS SHOULD ALWAYS BE RUN, EVEN IF NO DATA IS FOUND
+        setCustomItems(convertedGenericData);
+
+        updateUpgradesDisplay();
+
+        updateDisplay();
     }
-    else{
-        console.warn("No localStorage for resources found");
+    catch(error){
+        console.error("Error thrown while loading saved data: " + error);
     }
-
-    if(loadedUpgradeData){
-        convertedUpgradeData = JSON.parse(loadedUpgradeData);
-
-        if(doubleClickFood){
-            doubleClickFood.active = convertedUpgradeData.doubleClickFood.active;
-        }
-        if(doubleClickWood){
-            doubleClickWood.active = convertedUpgradeData.doubleClickWood.active;
-        }
-        if(doubleClickStone){
-            doubleClickStone.active = convertedUpgradeData.doubleClickStone.active
-        }
-
-        updatePurchasedUpgradesDisplay(convertedUpgradeData);
-
-    }
-    else{
-        console.warn("No localStorage for upgrades found");
-    }
-
-    if(loadedWorkerData){
-        convertedWorkerData = JSON.parse(loadedWorkerData);
-
-        if(worker){
-            worker.total = convertedWorkerData.worker.total;
-            worker.cost = convertedWorkerData.worker.cost;
-        }
-        if(farmer){
-            farmer.total = convertedWorkerData.farmer.total;
-            farmer.effeciency = convertedWorkerData.farmer.effeciency;
-        }
-        if(lumberjack){
-            lumberjack.total = convertedWorkerData.lumberjack.total;
-            lumberjack.effeciency = convertedWorkerData.lumberjack.effeciency;
-        }
-        if(miner){
-            miner.total = convertedWorkerData.miner.total;
-            miner.effeciency = convertedWorkerData.miner.effeciency;
-        }
-
-        
-    }
-    else{
-        console.warn("No localStorage for workers found");
-    }
-    if(loadedGenericData){
-        convertedGenericData = JSON.parse(loadedGenericData);
-    }
-    else{
-        console.warn("No localStorage for generic info found");
-    }
-    // THIS SHOULD ALWAYS BE RUN, EVEN IF NO DATA IS FOUND
-    setCustomItems(convertedGenericData);
-
-    updateUpgradesDisplay();
-
-    updateDisplay();
 }
 
 // RESET DATA
@@ -636,6 +870,18 @@ newLumberjackButton.addEventListener("click", function(){
 newMinerButton.addEventListener("click", function(){
     assignWorker(miner.name, 1);
 });
+
+// BUILDINGS
+newBarnButton.addEventListener("click", function(){
+    newBuilding(barn, 1);
+});
+newLumberyardButton.addEventListener("click", function(){
+    newBuilding(lumberyard, 1);
+});
+newStoneyardButton.addEventListener("click", function(){
+    newBuilding(stoneyard, 1);
+});
+
 
 // UPGRADES
 upgradeButtons.forEach(function(currentButton){
@@ -691,6 +937,11 @@ function nestedLoop(obj) {
 
 // ASSIGN TIMEOUT TO A VARIABLE SO IT CAN BE CLEARED IF NECCESSARY
 let t = setInterval(intervalCode,1000);
+
+function clearInterval(){
+    clearTimeout(t);
+}
+
 function intervalCode(){
     // DEBUGGING FOR CODE EXECUTION TIME
     var start = new Date().getTime();
@@ -699,8 +950,10 @@ function intervalCode(){
 
     //DEBUGGING - MARK END OF MAIN LOOP AND CALCULATE DELTA IN MILLISECONDS
 	var end = new Date().getTime();
-	var time = end - start;
-	console.log("Main loop execution time: " + time + "ms...Start: " + start + " -> end: " + end);
+    var time = end - start;
+    
+    // FOR TIMING DEBUGGING
+	//console.log("Main loop execution time: " + time + "ms...Start: " + start + " -> end: " + end);
 
 
     updateDisplay();
@@ -708,13 +961,16 @@ function intervalCode(){
 
 function harvest(){
 
-    food.total = food.total + (farmer.productivity());
-    wood.total = wood.total + (lumberjack.productivity());
-    stone.total = stone.total + (miner.productivity());
+    if(storageCheck(food, farmer.productivity())){
+        food.total = food.total + farmer.productivity();
+    }
+    if(storageCheck(wood, lumberjack.productivity())){
+        wood.total = wood.total + lumberjack.productivity();
+    }
+    if(storageCheck(stone, miner.productivity())){
+        stone.total = stone.total + miner.productivity();
+    }
+    
 
     saveData();
-}
-
-function clearInterval(){
-    clearTimeout(t);
 }
