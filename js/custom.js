@@ -568,6 +568,7 @@ function newBuilding(type, num){
     if(type.canPurchaseBuilding(num)){
         type.purchaseBuilding(num);
         console.log("Adding " + type.name);
+        saveData();
         updateDisplay();
     }
 
@@ -643,6 +644,12 @@ function saveData(){
         miner:miner
     }
 
+    let buildingData = {
+        barn:barn,
+        lumberyard:lumberyard,
+        stoneyard:stoneyard
+    }
+
     let genericData = {
         empireName:empireName,
         emperorName:emperorName
@@ -656,7 +663,9 @@ function saveData(){
         localStorage.setItem("resourceStorage", JSON.stringify(resourceData));
         localStorage.setItem("upgradeStorage" , JSON.stringify(upgradeData));
         localStorage.setItem("workerStorage", JSON.stringify(workerData));
+        localStorage.setItem("buildingStorage", JSON.stringify(buildingData));
         localStorage.setItem("genericStorage", JSON.stringify(genericData));
+        
     }
     catch(error){
         console.error("Error: Cannot set localStorage: " + error);
@@ -673,6 +682,8 @@ function loadData(){
     let convertedUpgradeData;
     let loadedWorkerData;
     let convertedWorkerData;
+    let loadedBuildingData;
+    let convertedBuildingData;
     let loadedGenericData;
     let convertedGenericData;
 
@@ -700,103 +711,124 @@ function loadData(){
         console.warn("Error: Cannot load worker data: " + error);
     }
     try{
+        loadedBuildingData = localStorage.getItem("buildingStorage");
+    }
+    catch(error){
+        console.warn("Error: Cannot load building data: " + error);
+    }
+    try{
         loadedGenericData = localStorage.getItem("genericStorage");
     }
     catch(error){
         console.warn("Error: Cannot load generic data: " + error);
     }
+    
+    try{
+        if(loadedResourceData){
+            // THIS LOADS UP THE STORED DATA AND "UN-STRINGIFIES" BACK INTO AN OBJECT:
+            // RESOURCE.PROPERTY.VALUE
+            convertedResourceData = JSON.parse(loadedResourceData);
+            //console.log("convertedResourceData: ")
+            // console.log(convertedResourceData);
+            
+            // FOOD DATA
+            if(convertedResourceData.food.total != null){
+                food.total = convertedResourceData.food.total;
+            }
+            if(convertedResourceData.food.clickValue != null){
+                food.clickValue = convertedResourceData.food.clickValue;
+            }
+            // WOOD DATA
+            if(convertedResourceData.wood.total != null){
+                wood.total = convertedResourceData.wood.total;
+            }
+            if(convertedResourceData.wood.clickValue != null){
+                wood.clickValue = convertedResourceData.wood.clickValue;
+            }
+            // STONE DATA
+            if(convertedResourceData.stone.total != null){
+                stone.total = convertedResourceData.stone.total;
+            }
+            if(convertedResourceData.stone.clickValue != null){
+                stone.clickValue = convertedResourceData.stone.clickValue;
+            }
 
-    if(loadedResourceData){
-        // THIS LOADS UP THE STORED DATA AND "UN-STRINGIFIES" BACK INTO AN OBJECT:
-        // RESOURCE.PROPERTY.VALUE
-        convertedResourceData = JSON.parse(loadedResourceData);
-        //console.log("convertedResourceData: ")
-        // console.log(convertedResourceData);
-        
-        // FOOD DATA
-        if(convertedResourceData.food.total != null){
-            food.total = convertedResourceData.food.total;
         }
-        if(convertedResourceData.food.clickValue != null){
-            food.clickValue = convertedResourceData.food.clickValue;
-        }
-        // WOOD DATA
-        if(convertedResourceData.wood.total != null){
-            wood.total = convertedResourceData.wood.total;
-        }
-        if(convertedResourceData.wood.clickValue != null){
-            wood.clickValue = convertedResourceData.wood.clickValue;
-        }
-        // STONE DATA
-        if(convertedResourceData.stone.total != null){
-            stone.total = convertedResourceData.stone.total;
-        }
-        if(convertedResourceData.stone.clickValue != null){
-            stone.clickValue = convertedResourceData.stone.clickValue;
+        else{
+            console.warn("No localStorage for resources found");
         }
 
+        if(loadedUpgradeData){
+            convertedUpgradeData = JSON.parse(loadedUpgradeData);
+
+            if(doubleClickFood){
+                doubleClickFood.active = convertedUpgradeData.doubleClickFood.active;
+            }
+            if(doubleClickWood){
+                doubleClickWood.active = convertedUpgradeData.doubleClickWood.active;
+            }
+            if(doubleClickStone){
+                doubleClickStone.active = convertedUpgradeData.doubleClickStone.active
+            }
+
+            updatePurchasedUpgradesDisplay(convertedUpgradeData);
+
+        }
+        else{
+            console.warn("No localStorage for upgrades found");
+        }
+
+        if(loadedWorkerData){
+            convertedWorkerData = JSON.parse(loadedWorkerData);
+
+            if(convertedWorkerData.worker){
+                worker.total = convertedWorkerData.worker.total;
+                worker.cost = convertedWorkerData.worker.cost;
+            }
+            if(convertedWorkerData.farmer){
+                farmer.total = convertedWorkerData.farmer.total;
+                farmer.effeciency = convertedWorkerData.farmer.effeciency;
+            }
+            if(convertedWorkerData.lumberjack){
+                lumberjack.total = convertedWorkerData.lumberjack.total;
+                lumberjack.effeciency = convertedWorkerData.lumberjack.effeciency;
+            }
+            if(convertedWorkerData.miner){
+                miner.total = convertedWorkerData.miner.total;
+                miner.effeciency = convertedWorkerData.miner.effeciency;
+            }
+
+            
+        }
+        else{
+            console.warn("No localStorage for workers found");
+        }
+        if(loadedBuildingData){
+            convertedBuildingData = JSON.parse(loadedBuildingData);
+
+            barn.total = convertedBuildingData.barn.total;
+            lumberyard.total = convertedBuildingData.lumberyard.total;
+            stoneyard.total = convertedBuildingData.stoneyard.total;
+        }
+        else{
+            console.warn("No localstorage for buildings found");
+        }
+        if(loadedGenericData){
+            convertedGenericData = JSON.parse(loadedGenericData);
+        }
+        else{
+            console.warn("No localStorage for generic info found");
+        }
+        // THIS SHOULD ALWAYS BE RUN, EVEN IF NO DATA IS FOUND
+        setCustomItems(convertedGenericData);
+
+        updateUpgradesDisplay();
+
+        updateDisplay();
     }
-    else{
-        console.warn("No localStorage for resources found");
+    catch(error){
+        console.error("Error thrown while loading saved data: " + error);
     }
-
-    if(loadedUpgradeData){
-        convertedUpgradeData = JSON.parse(loadedUpgradeData);
-
-        if(doubleClickFood){
-            doubleClickFood.active = convertedUpgradeData.doubleClickFood.active;
-        }
-        if(doubleClickWood){
-            doubleClickWood.active = convertedUpgradeData.doubleClickWood.active;
-        }
-        if(doubleClickStone){
-            doubleClickStone.active = convertedUpgradeData.doubleClickStone.active
-        }
-
-        updatePurchasedUpgradesDisplay(convertedUpgradeData);
-
-    }
-    else{
-        console.warn("No localStorage for upgrades found");
-    }
-
-    if(loadedWorkerData){
-        convertedWorkerData = JSON.parse(loadedWorkerData);
-
-        if(worker){
-            worker.total = convertedWorkerData.worker.total;
-            worker.cost = convertedWorkerData.worker.cost;
-        }
-        if(farmer){
-            farmer.total = convertedWorkerData.farmer.total;
-            farmer.effeciency = convertedWorkerData.farmer.effeciency;
-        }
-        if(lumberjack){
-            lumberjack.total = convertedWorkerData.lumberjack.total;
-            lumberjack.effeciency = convertedWorkerData.lumberjack.effeciency;
-        }
-        if(miner){
-            miner.total = convertedWorkerData.miner.total;
-            miner.effeciency = convertedWorkerData.miner.effeciency;
-        }
-
-        
-    }
-    else{
-        console.warn("No localStorage for workers found");
-    }
-    if(loadedGenericData){
-        convertedGenericData = JSON.parse(loadedGenericData);
-    }
-    else{
-        console.warn("No localStorage for generic info found");
-    }
-    // THIS SHOULD ALWAYS BE RUN, EVEN IF NO DATA IS FOUND
-    setCustomItems(convertedGenericData);
-
-    updateUpgradesDisplay();
-
-    updateDisplay();
 }
 
 // RESET DATA
