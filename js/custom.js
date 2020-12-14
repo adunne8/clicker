@@ -7,6 +7,7 @@ let stone;
 
 let empireName;
 let emperorName;
+let darkmodeState;
 
 // RESOURCES
 class Resource {
@@ -196,6 +197,9 @@ const empireNameDisplay = document.getElementById("title__name");
 const emperorNameDisplay = document.getElementById("emperor__name");
 const darkModeDisplay = document.getElementById("darmode_state");
 
+// STYLESHEETS
+const darkmodeStylesheet = document.styleSheets[1];
+
 
 
 
@@ -254,6 +258,8 @@ function initializeValues(){
     barn = new Building(barnParams);
     lumberyard = new Building(lumberyardParams);
     stoneyard = new Building(stoneyardParms);
+
+
 
     
 }
@@ -460,14 +466,23 @@ function setCustomItems(convertedGenericData){
     if(convertedGenericData){
         empireName = convertedGenericData.empireName;
         emperorName = convertedGenericData.emperorName;
+        darkmodeState = convertedGenericData.darkmodeState;
     }
     else{
         empireName = prompt("What is the name of your empire?");
         emperorName = prompt("What is your name?");
+        darkmodeState = false;
     }
 
     empireNameDisplay.textContent = empireName;
     emperorNameDisplay.textContent = emperorName;
+
+    if(darkmodeState){
+        darkmodeStylesheet.disabled = false;
+    }
+    else{
+        darkmodeStylesheet.disabled = true;
+    }
 
     saveData();
 
@@ -477,14 +492,13 @@ function setCustomItems(convertedGenericData){
 // SWITCHESON OR OFF THE DARKMODE CSS STYLESHEET
 function toggleDarkmode(){
     // IF DARKMODE IS CURRENTLY DISABLED
-    if(document.styleSheets[1].disabled === true){
-        document.styleSheets[1].disabled = false;
+    if(darkmodeStylesheet.disabled){
+        darkmodeStylesheet.disabled = false;
         darkModeDisplay.textContent = "on";
         console.debug("Switching Darkmode on");
     }
-    // IF DARKMODE IS CURRENTLY OFF
     else{
-        document.styleSheets[1].disabled = true;
+        darkmodeStylesheet.disabled = true;
         console.debug("Switching Darkmode off");
         darkModeDisplay.textContent = "off";
     }
@@ -670,7 +684,7 @@ function saveData(){
 
     let genericData = {
         empireName:empireName,
-        emperorName:emperorName
+        emperorName:emperorName,
     }
 
 
