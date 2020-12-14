@@ -1,0 +1,9 @@
+body{
+    background-color: #000000;
+    color: #ffffff;
+}
+
+.game__panel{
+    background-color: #14213d;
+    border-color: #e5e5e5;
+}

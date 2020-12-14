@@ -162,8 +162,9 @@ const newStoneyardButton = document.getElementById("build_stoneyard");
 const upgradeButtons = document.querySelectorAll(".upgrade__button");
 
 // SYSTEM MANAGEMENT BUTTONS
-const resetButton = document.getElementById("management__reset");
-const renameButton = document.getElementById("management__rename");
+const resetButton = document.getElementById("reset_game");
+const renameButton = document.getElementById("reset_name");
+const toggleDarkmodeButton = document.getElementById("toggle_darkmode");
 
 
 
@@ -193,7 +194,7 @@ const purchasedUpgradeList = document.getElementById("pu_section");
 
 const empireNameDisplay = document.getElementById("title__name");
 const emperorNameDisplay = document.getElementById("emperor__name");
-
+const darkModeDisplay = document.getElementById("darmode_state");
 
 
 
@@ -470,6 +471,23 @@ function setCustomItems(convertedGenericData){
 
     saveData();
 
+
+}
+
+// SWITCHESON OR OFF THE DARKMODE CSS STYLESHEET
+function toggleDarkmode(){
+    // IF DARKMODE IS CURRENTLY DISABLED
+    if(document.styleSheets[1].disabled === true){
+        document.styleSheets[1].disabled = false;
+        darkModeDisplay.textContent = "on";
+        console.debug("Switching Darkmode on");
+    }
+    // IF DARKMODE IS CURRENTLY OFF
+    else{
+        document.styleSheets[1].disabled = true;
+        console.debug("Switching Darkmode off");
+        darkModeDisplay.textContent = "off";
+    }
 
 }
 
@@ -891,11 +909,15 @@ upgradeButtons.forEach(function(currentButton){
 });
 
 // SYSTEM
-resetButton.addEventListener("click", resetValues);
+resetButton.addEventListener("click", function(){
+    resetValues()
+});
 renameButton.addEventListener("click", function(){
     setCustomItems();
 });
-
+toggleDarkmodeButton.addEventListener("click", function(){
+    toggleDarkmode();
+});
 loadData();
 
 
