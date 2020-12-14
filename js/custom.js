@@ -496,11 +496,13 @@ function toggleDarkmode(){
         darkmodeStylesheet.disabled = false;
         darkModeDisplay.textContent = "on";
         console.debug("Switching Darkmode on");
+        darkmodeState = true;
     }
     else{
         darkmodeStylesheet.disabled = true;
         console.debug("Switching Darkmode off");
         darkModeDisplay.textContent = "off";
+        darkmodeState = false;
     }
 
 }
@@ -656,7 +658,7 @@ storageCheck(food);
 
 // SAVING DATA
 function saveData(){
-
+    // WE FIRST DECLARE THE DATA OBJECTS TO BE STORED
     let resourceData = {
         food:food,
         wood:wood,
@@ -685,12 +687,12 @@ function saveData(){
     let genericData = {
         empireName:empireName,
         emperorName:emperorName,
+        darkmodeState:darkmodeState
     }
 
-
+    // THEN CONVERT THE Data Objects INTO A JSON STRING AND SAVE TO localStorage
+    // EG {"food":{"name":"food","total":377,"clickValue":128}}
     try{
-        // CONVERTS THE resourceData Object INTO A JSON STRING FOR localStorage
-        // EG {"food":{"name":"food","total":377,"clickValue":128}}
 
         localStorage.setItem("resourceStorage", JSON.stringify(resourceData));
         localStorage.setItem("upgradeStorage" , JSON.stringify(upgradeData));
@@ -989,7 +991,7 @@ function intervalCode(){
     var time = end - start;
     
     // FOR TIMING DEBUGGING
-	//console.log("Main loop execution time: " + time + "ms...Start: " + start + " -> end: " + end);
+	console.debug("Main loop execution time: " + time + "ms...Start: " + start + " -> end: " + end);
 
 
     updateDisplay();
