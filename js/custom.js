@@ -476,12 +476,16 @@ function setCustomItems(convertedGenericData){
 
     empireNameDisplay.textContent = empireName;
     emperorNameDisplay.textContent = emperorName;
-
+    
+    // REPEATED CODE?
     if(darkmodeState){
         darkmodeStylesheet.disabled = false;
+        darkModeDisplay.textContent = "on";
     }
     else{
         darkmodeStylesheet.disabled = true;
+        darkModeDisplay.textContent = "off";
+
     }
 
     saveData();
@@ -489,7 +493,7 @@ function setCustomItems(convertedGenericData){
 
 }
 
-// SWITCHESON OR OFF THE DARKMODE CSS STYLESHEET
+// SWITCHES ON OR OFF THE DARKMODE CSS STYLESHEET
 function toggleDarkmode(){
     // IF DARKMODE IS CURRENTLY DISABLED
     if(darkmodeStylesheet.disabled){
@@ -504,6 +508,8 @@ function toggleDarkmode(){
         darkModeDisplay.textContent = "off";
         darkmodeState = false;
     }
+    // NEED TO SAVE THE DARKMODE STATE
+    saveData();
 
 }
 
