@@ -7,6 +7,7 @@ let stone;
 
 let empireName;
 let emperorName;
+let darkmodeState;
 
 // RESOURCES
 class Resource {
@@ -162,8 +163,9 @@ const newStoneyardButton = document.getElementById("build_stoneyard");
 const upgradeButtons = document.querySelectorAll(".upgrade__button");
 
 // SYSTEM MANAGEMENT BUTTONS
-const resetButton = document.getElementById("management__reset");
-const renameButton = document.getElementById("management__rename");
+const resetButton = document.getElementById("reset_game");
+const renameButton = document.getElementById("reset_name");
+const toggleDarkmodeButton = document.getElementById("toggle_darkmode");
 
 
 
@@ -193,7 +195,10 @@ const purchasedUpgradeList = document.getElementById("pu_section");
 
 const empireNameDisplay = document.getElementById("title__name");
 const emperorNameDisplay = document.getElementById("emperor__name");
+const darkModeDisplay = document.getElementById("darmode_state");
 
+// STYLESHEETS
+const darkmodeStylesheet = document.styleSheets[1];
 
 
 
@@ -253,6 +258,8 @@ function initializeValues(){
     barn = new Building(barnParams);
     lumberyard = new Building(lumberyardParams);
     stoneyard = new Building(stoneyardParms);
+
+
 
     
 }
@@ -459,17 +466,50 @@ function setCustomItems(convertedGenericData){
     if(convertedGenericData){
         empireName = convertedGenericData.empireName;
         emperorName = convertedGenericData.emperorName;
+        darkmodeState = convertedGenericData.darkmodeState;
     }
     else{
         empireName = prompt("What is the name of your empire?");
         emperorName = prompt("What is your name?");
+        darkmodeState = false;
     }
 
     empireNameDisplay.textContent = empireName;
     emperorNameDisplay.textContent = emperorName;
+    
+    // REPEATED CODE?
+    if(darkmodeState){
+        darkmodeStylesheet.disabled = false;
+        darkModeDisplay.textContent = "on";
+    }
+    else{
+        darkmodeStylesheet.disabled = true;
+        darkModeDisplay.textContent = "off";
+
+    }
 
     saveData();
 
+
+}
+
+// SWITCHES ON OR OFF THE DARKMODE CSS STYLESHEET
+function toggleDarkmode(){
+    // IF DARKMODE IS CURRENTLY DISABLED
+    if(darkmodeStylesheet.disabled){
+        darkmodeStylesheet.disabled = false;
+        darkModeDisplay.textContent = "on";
+        console.debug("Switching Darkmode on");
+        darkmodeState = true;
+    }
+    else{
+        darkmodeStylesheet.disabled = true;
+        console.debug("Switching Darkmode off");
+        darkModeDisplay.textContent = "off";
+        darkmodeState = false;
+    }
+    // NEED TO SAVE THE DARKMODE STATE
+    saveData();
 
 }
 
@@ -624,7 +664,7 @@ storageCheck(food);
 
 // SAVING DATA
 function saveData(){
-
+    // WE FIRST DECLARE THE DATA OBJECTS TO BE STORED
     let resourceData = {
         food:food,
         wood:wood,
@@ -652,13 +692,13 @@ function saveData(){
 
     let genericData = {
         empireName:empireName,
-        emperorName:emperorName
+        emperorName:emperorName,
+        darkmodeState:darkmodeState
     }
 
-
+    // THEN CONVERT THE Data Objects INTO A JSON STRING AND SAVE TO localStorage
+    // EG {"food":{"name":"food","total":377,"clickValue":128}}
     try{
-        // CONVERTS THE resourceData Object INTO A JSON STRING FOR localStorage
-        // EG {"food":{"name":"food","total":377,"clickValue":128}}
 
         localStorage.setItem("resourceStorage", JSON.stringify(resourceData));
         localStorage.setItem("upgradeStorage" , JSON.stringify(upgradeData));
@@ -891,11 +931,15 @@ upgradeButtons.forEach(function(currentButton){
 });
 
 // SYSTEM
-resetButton.addEventListener("click", resetValues);
+resetButton.addEventListener("click", function(){
+    resetValues()
+});
 renameButton.addEventListener("click", function(){
     setCustomItems();
 });
-
+toggleDarkmodeButton.addEventListener("click", function(){
+    toggleDarkmode();
+});
 loadData();
 
 
@@ -953,7 +997,7 @@ function intervalCode(){
     var time = end - start;
     
     // FOR TIMING DEBUGGING
-	//console.log("Main loop execution time: " + time + "ms...Start: " + start + " -> end: " + end);
+	console.debug("Main loop execution time: " + time + "ms...Start: " + start + " -> end: " + end);
 
 
     updateDisplay();

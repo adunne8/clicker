@@ -1,23 +1,4 @@
 
-button {
-    border: 1px solid #212121;
-    border-radius: 3px;
-    padding: 5px;
-    font-size: 1.2rem;
-    margin: 5px 0;
-    background-color: #fff;
-    width: auto;
-    cursor: pointer; 
-    min-width: 150px;
-
-
-    font-size: 1rem;
-}
-
-button:hover {
-    background-color: #f0f0f0; 
-}
-
 
 
 
@@ -30,7 +11,7 @@ button:hover {
 
 
 body{
-    background-color: grey;
+    background-color: #cccccc;
     font-family: 'Lato', sans-serif;
     font-size: 10pt;
 }
@@ -95,6 +76,25 @@ body{
     color: red;
 }
 
+
+button {
+    border: 1px solid #212121;
+    border-radius: 3px;
+    padding: 5px;
+    font-size: 1.2rem;
+    margin: 5px 0;
+    background-color: #fff;
+    width: auto;
+    cursor: pointer; 
+    min-width: 150px;
+
+
+    font-size: 1rem;
+}
+
+button:hover {
+    background-color: #f0f0f0; 
+}
 
 
 
