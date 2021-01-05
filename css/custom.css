@@ -1,19 +1,23 @@
-
-
-
-
-
 @font-face {
     font-family: "Lato";
     src: url("../fonts/Lato/Lato-Regular.ttf");
 }
 
+html, body{
+    height: 100%;
 
+}
 
 body{
     background-color: #cccccc;
     font-family: 'Lato', sans-serif;
     font-size: 10pt;
+}
+article{
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-columns: 100%;
+    min-height: 100%;
 }
 
 /*
@@ -95,9 +99,15 @@ button {
 button:hover {
     background-color: #f0f0f0; 
 }
-
-
-
-
-
-
+button:focus{
+    outline: 0;
+}
+.button--minimal{
+    border: 0;
+    margin: 0;
+    background-color: transparent;
+    min-width: auto;
+}
+#cookie_detail{
+    display: none;
+}
