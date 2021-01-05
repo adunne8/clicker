@@ -166,7 +166,7 @@ const upgradeButtons = document.querySelectorAll(".upgrade__button");
 const resetButton = document.getElementById("reset_game");
 const renameButton = document.getElementById("reset_name");
 const toggleDarkmodeButton = document.getElementById("toggle_darkmode");
-
+const showCookiePolicy = document.getElementById("show_cookiepolicy");
 
 
 // DISPLAYS
@@ -196,6 +196,8 @@ const purchasedUpgradeList = document.getElementById("pu_section");
 const empireNameDisplay = document.getElementById("title__name");
 const emperorNameDisplay = document.getElementById("emperor__name");
 const darkModeDisplay = document.getElementById("darmode_state");
+
+const cookiePolicyDisplay = document.getElementById("cookie_detail");
 
 // STYLESHEETS
 const darkmodeStylesheet = document.styleSheets[1];
@@ -511,6 +513,16 @@ function toggleDarkmode(){
     // NEED TO SAVE THE DARKMODE STATE
     saveData();
 
+}
+
+function toggleCookiePolicy(){
+    console.log(cookiePolicyDisplay.style.display);
+    if(cookiePolicyDisplay.style.display === 'block'){
+        cookiePolicyDisplay.style.display = 'none';
+    }
+    else{
+        cookiePolicyDisplay.style.display = 'block';
+    }
 }
 
 
@@ -940,6 +952,11 @@ renameButton.addEventListener("click", function(){
 toggleDarkmodeButton.addEventListener("click", function(){
     toggleDarkmode();
 });
+
+showCookiePolicy.addEventListener("click", function(){
+    toggleCookiePolicy();
+})
+// CHECK FOR AND LOAD DATA FROM LOCALSTORAGE
 loadData();
 
 
