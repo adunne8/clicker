@@ -30,11 +30,12 @@ class Resource {
 
 
 class Worker {
-    constructor(name, total, effeciency, cost = 0){
+    constructor(name, total, effeciency, cost = 0, hunger = .8){
         this.name = name,
         this.total = total,
         this.effeciency = effeciency,
-        this.cost = cost
+        this.cost = cost,
+        this.hunger = hunger
     }
     //LISTS OUT ALL PROPERTIES+VALUES OF THE CLASS
     toString(){
@@ -47,6 +48,10 @@ class Worker {
 
     productivity(){
         return this.total * this.effeciency;
+    }
+    // RETURNS THE TOTAL AMOUNT OF WORKERS
+    summary(){
+        return worker.total + farmer.total + lumberjack.total + miner.total;
     }
 }
 
@@ -672,6 +677,8 @@ function storageCheck(resourceType, amount){
 storageCheck(food);
 
 
+
+
 /************** LOCAL STORAGE SAVING/LOADING/RESET FUNCTIONS **************/
 
 // SAVING DATA
@@ -1008,6 +1015,7 @@ function intervalCode(){
     var start = new Date().getTime();
 
     harvest();
+    hunger();
 
     //DEBUGGING - MARK END OF MAIN LOOP AND CALCULATE DELTA IN MILLISECONDS
 	var end = new Date().getTime();
@@ -1021,7 +1029,7 @@ function intervalCode(){
 }
 
 function harvest(){
-
+    // CHECK IF THERE IS CAPACITY FIRST, THEN ADD THE HARVESTED AMOUNT TO THE TOALS
     if(storageCheck(food, farmer.productivity())){
         food.total = food.total + farmer.productivity();
     }
@@ -1035,3 +1043,13 @@ function harvest(){
 
     saveData();
 }
+
+function hunger(){
+
+    // WANT TO GET THE TOTAL NUMBER OF CITIZENS, MULTIPLY THAT BY THE HUNGER FACTOR AND TAKE THAT AWAY FROM THE FOOD TOTAL, AS LONG AS THERE IS FOOD AVAILABLE
+    food.total = food.total - (worker.summary() * worker.hunger);
+
+    // IF FOOD.TOTAL - HUMGER NUMBER > 0 THEN DO THE NEEDFUL
+}
+
+
