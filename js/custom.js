@@ -217,10 +217,10 @@ function initializeValues(){
     wood = new Resource("wood", 0, 1);
     stone = new Resource("stone", 0, 1);
 
-    worker = new Worker("worker", 0, 1, 10);
+    worker = new Worker("worker", 0, 1, 20);
     farmer = new Worker("farmer", 0, 1);
-    lumberjack = new Worker("lumberjack", 0, 1);
-    miner = new Worker("miner", 0, 1);
+    lumberjack = new Worker("lumberjack", 0, .5);
+    miner = new Worker("miner", 0, .2);
 
     // LOOPS THROUGH EACH KEY IN THE upgradesList OBJECT AND SETS THEM TO FALSE
     /*
@@ -336,15 +336,16 @@ function updateTotalsDisplay(){
 
 // THIS FUNCTION SETS THE VALUES AND COLOUR OF THE RESOURCE BEING GENERATED EACH SECOND
 function updateProductivityDisplay(){
-    foodIncrementDisplay.textContent = farmer.productivity();
+    // THIS CALCULATION IS DONE A FEW TIMES - CAN BE CONDENSED
+    foodIncrementDisplay.textContent = beautifyNumber(farmer.productivity() - (worker.summary() * worker.hunger), 1, false);
     woodIncrementDisplay.textContent = lumberjack.productivity();
     stoneIncrementDisplay.textContent = miner.productivity();
 
-    if(farmer.productivity() > 0){
+    if(farmer.productivity() - (worker.summary() * worker.hunger)>= 0){
         foodIncrementDisplay.classList.remove("property__increment--negative");
         foodIncrementDisplay.classList.add("property__increment--positive");
     }
-    else if(farmer.productivity() < 0){
+    else{
         foodIncrementDisplay.classList.remove("property__increment--positive");
         foodIncrementDisplay.classList.add("property__increment--negative");
     }
@@ -634,7 +635,7 @@ function newBuilding(type, num){
 
 
 
-// THIS FUNCTION CHECKS IF THERE IS STORAGE AVAILABLE TO ADD THE RESOURCE/WROKER TO
+// THIS FUNCTION CHECKS IF THERE IS STORAGE AVAILABLE TO ADD THE RESOURCE/WORKER TO
 function storageCheck(resourceType, amount){
     let storageType;
     if(resourceType === worker){
@@ -674,7 +675,7 @@ function storageCheck(resourceType, amount){
     }
 }
 
-storageCheck(food);
+
 
 
 
@@ -1015,7 +1016,7 @@ function intervalCode(){
     var start = new Date().getTime();
 
     harvest();
-    hunger();
+    
 
     //DEBUGGING - MARK END OF MAIN LOOP AND CALCULATE DELTA IN MILLISECONDS
 	var end = new Date().getTime();
@@ -1028,28 +1029,38 @@ function intervalCode(){
     updateDisplay();
 }
 
+// THIS FUNCTION GATHERS THE RESOURCES WORKERS ARE PRODUCING, PROCESS THEIR HUNGER, AND CAPS RESOURCES WITH STORAGE LIMITS
 function harvest(){
-    // CHECK IF THERE IS CAPACITY FIRST, THEN ADD THE HARVESTED AMOUNT TO THE TOALS
-    if(storageCheck(food, farmer.productivity())){
-        food.total = food.total + farmer.productivity();
+    // ADD THE HARVESTED AMOUNT TO THE TOTALS
+    food.total += farmer.productivity();
+    wood.total += lumberjack.productivity();
+    stone.total += miner.productivity();
+
+
+    // CLEANUP - RUNNING THIS MULTIPLE TIMES
+    // SUBTRACT THE HUNGER FACTOR FOR THE TOTAL POPULATION FROM THE FOOD TOTALS
+    food.total -= (worker.summary() * worker.hunger);
+
+
+    // CLEANUP - SINGLE STORAGE FOR STORAGE BUILDINGS
+    // IF THE RESOURCE TOTALS ARE GREATER THAN THE STORAGE SPACE, RESET TO MAX STORAGE SPACE
+    if(food.total > (barn.total * barn.foodStorage)){
+        food.total = barn.total * barn.foodStorage;
     }
-    if(storageCheck(wood, lumberjack.productivity())){
-        wood.total = wood.total + lumberjack.productivity();
+    if(wood.total > (lumberyard.total * lumberyard.woodStorage)){
+        wood.total = lumberyard.total * lumberyard.woodStorage;
     }
-    if(storageCheck(stone, miner.productivity())){
-        stone.total = stone.total + miner.productivity();
+    if(stone.total > (stoneyard.total * stoneyard.stoneStorage)){
+        stone.total = stoneyard.total * stoneyard.stoneStorage;
     }
-    
+
+    // TODO - ADD WHAT HAPPENS IF AVAILABLE FOOD IS > 0, PLACEHOLDER FOR NOW, FAMINE TO BE IMPLEMENTED
+    if(food.total < 0){
+        food.total = 0;
+    }
+
 
     saveData();
-}
-
-function hunger(){
-
-    // WANT TO GET THE TOTAL NUMBER OF CITIZENS, MULTIPLY THAT BY THE HUNGER FACTOR AND TAKE THAT AWAY FROM THE FOOD TOTAL, AS LONG AS THERE IS FOOD AVAILABLE
-    food.total = food.total - (worker.summary() * worker.hunger);
-
-    // IF FOOD.TOTAL - HUMGER NUMBER > 0 THEN DO THE NEEDFUL
 }
 
 
