@@ -1029,6 +1029,28 @@ function intervalCode(){
     updateDisplay();
 }
 
+// TODO - MAKE THIS PARAMETER DRIVEN
+// THIS FUNCTION REDUCES THE POPULATION BY 1
+function culling(){
+
+    if(miner.total > 0){
+        miner.total--;
+    }
+    else if(lumberjack.total > 0){
+        lumberjack.total--;
+    }
+    else if(farmer.total > 0){
+        farmer.total--;
+    }
+    else if(worker.total > 0){
+        worker.total--;
+    }
+    else{
+        console.log("Nothing to cull");
+    }
+
+}
+
 // THIS FUNCTION GATHERS THE RESOURCES WORKERS ARE PRODUCING, PROCESS THEIR HUNGER, AND CAPS RESOURCES WITH STORAGE LIMITS
 function harvest(){
     // ADD THE HARVESTED AMOUNT TO THE TOTALS
@@ -1056,7 +1078,10 @@ function harvest(){
 
     // TODO - ADD WHAT HAPPENS IF AVAILABLE FOOD IS > 0, PLACEHOLDER FOR NOW, FAMINE TO BE IMPLEMENTED
     if(food.total < 0){
+        // FOOD LEVELS SHOULD NOT DROP BELOW 0;
         food.total = 0;
+
+        culling();
     }
 
 
