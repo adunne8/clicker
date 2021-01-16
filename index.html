@@ -21,94 +21,102 @@
         <main>
             <div id="game">
 
-            <section id="resource_section" class="game__panel">
-                <h1 id="resource__heading">Resources</h1>
+                <section id="resource_section" class="game__panel">
+                    <h1 id="resource__heading">Resources</h1>
 
-                <div class="property__row">
-                    <button id="food__button">Gather food</button>
-                    <span class="property__display">Food: 
-                        <span id="food__count">0</span>/<span id="food__max"></span>
-                        <span id="food__increment" class="property__increment"></span>/s
-                    </span>
-                </div>
-                <div class="property__row">
-                    <button id="wood__button">Gather wood</button>
-                    <span class="property__display">Wood: 
-                        <span id="wood__count">0</span>/<span id="wood__max"></span>
-                        <span id="wood__increment" class="property__increment"></span>/s
-                    </span>
-                </div>
-                <div class="property__row">
-                    <button id="stone__button">Gather stone</button>
-                    <span class="property__display">Stone: 
-                        <span id="stone__count">0</span>/<span id="stone__max"></span>
-                        <span id="stone__increment" class="property__increment"></span>/s
-                    </span>
-                </div>
+                    <div class="property__row">
+                        <button id="food__button">Gather food</button>
+                        <span class="property__display">Food: 
+                            <span id="food__count">0</span>/<span id="food__max"></span>
+                            <span id="food__increment" class="property__increment"></span>/s
+                        </span>
+                    </div>
+                    <div class="property__row">
+                        <button id="wood__button">Gather wood</button>
+                        <span class="property__display">Wood: 
+                            <span id="wood__count">0</span>/<span id="wood__max"></span>
+                            <span id="wood__increment" class="property__increment"></span>/s
+                        </span>
+                    </div>
+                    <div class="property__row">
+                        <button id="stone__button">Gather stone</button>
+                        <span class="property__display">Stone: 
+                            <span id="stone__count">0</span>/<span id="stone__max"></span>
+                            <span id="stone__increment" class="property__increment"></span>/s
+                        </span>
+                    </div>
 
-            </section>
-            
-            <section id="buildings_section" class="game__panel">
-                <h1 id="buildings_heading">Buildings</h1>
-                <div class="property__row">
-                    <button id="build_barn">Build Barn</button>
-                    <span class="property__display">Barns: <span id="barn__count"></span></span>
-                </div>
-                <div class="property__row">
-                    <button id="build_lumberyard">Build Lumberyard</button>
-                    <span class="property__display">Lumberyards: <span id="lumberyard__count"></span></span>
-                </div>
-                <div class="property__row">
-                    <button id="build_stoneyard">Build Stoneyard</button>
-                    <span class="property__display">Stoneyards: <span id="stoneyard__count"></span></span>
-                </div>
-            </section>
+                </section>
+                
+                <section id="buildings_section" class="game__panel">
+                    <h1 id="buildings_heading">Buildings</h1>
+                    <div class="property__row">
+                        <button id="build_barn">Build Barn</button>
+                        <span class="property__display">Barns: <span id="barn__count"></span></span>
+                    </div>
+                    <div class="property__row">
+                        <button id="build_lumberyard">Build Lumberyard</button>
+                        <span class="property__display">Lumberyards: <span id="lumberyard__count"></span></span>
+                    </div>
+                    <div class="property__row">
+                        <button id="build_stoneyard">Build Stoneyard</button>
+                        <span class="property__display">Stoneyards: <span id="stoneyard__count"></span></span>
+                    </div>
+                </section>
 
-            <section id="upgrade_section" class="game__panel">
-                <h1 id="upgrades_heading">Upgrades</h1>
+                <section id="upgrade_section" class="game__panel">
+                    <h1 id="upgrades_heading">Upgrades</h1>
 
-                <button id="doubleclick--food" class="upgrade__button">Double Food Per Click<br>(100) Food</button>
-                <button id="doubleclick--wood" class="upgrade__button">Double wood Per Click<br>(100) Wood</button>
-                <button id="doubleclick--stone" class="upgrade__button">Double stone Per Click<br>(100) Stone</button>
-            </section>
-            
+                    <button id="doubleclick--food" class="upgrade__button">Double Food Per Click<br>(100) Food</button>
+                    <button id="doubleclick--wood" class="upgrade__button">Double wood Per Click<br>(100) Wood</button>
+                    <button id="doubleclick--stone" class="upgrade__button">Double stone Per Click<br>(100) Stone</button>
+                </section>
+                
 
-            <section id="worker_section" class="game__panel">
-                <h1 id="worker__heading">Workers</h1>
+                <section id="worker_section" class="game__panel">
+                    <h1 id="worker__heading">Workers</h1>
 
-                <div class="property__row">
-                    <button id="worker__new" class="worker__button">Add worker</button>
-                    <span class="property__display">Workers: <span id="worker__count">0</span></span>
-                </div>
-                <div class="property__row">
-                    <button id="worker__farmer" class="worker__button">Add farmer</button>
-                    <span class="property__display">Farmers: <span id="farmer__count">0</span></span>
-                </div>
-                <div class="property__row">
-                    <button id="worker__lumberjack" class="worker__button">Add lumberjack</button>
-                    <span class="property__display">Lumberjacks: <span id="lumberjack__count">0</span></span>
+                    <div class="property__row">
+                        <button id="worker__new" class="worker__button">Add worker</button>
+                        <span class="property__display">Workers: <span id="worker__count">0</span></span>
+                    </div>
+                    <div class="property__row">
+                        <button id="worker__farmer" class="worker__button">Add farmer</button>
+                        <span class="property__display">Farmers: <span id="farmer__count">0</span></span>
+                    </div>
+                    <div class="property__row">
+                        <button id="worker__lumberjack" class="worker__button">Add lumberjack</button>
+                        <span class="property__display">Lumberjacks: <span id="lumberjack__count">0</span></span>
 
-                </div>
-                <div class="property__row">
-                    <button id="worker__miner" class="worker__button">Add miner</button>
-                    <span class="property__display">Miners: <span id="miner__count">0</span>
-                </div>
-            </section>
-            
-            <section id="system_section" class="game__panel">
-                <h1 id="system__heading">Game Management</h1>
+                    </div>
+                    <div class="property__row">
+                        <button id="worker__miner" class="worker__button">Add miner</button>
+                        <span class="property__display">Miners: <span id="miner__count">0</span>
+                    </div>
+                </section>
+                
+                <section id="system_section" class="game__panel">
+                    <h1 id="system__heading">Game Management</h1>
 
-                <button type="button" id="reset_game">Reset</button>
-                <button type="button" id="reset_name">Rename</button>
-                <button type="button" id="toggle_darkmode">Darkmode: <span id="darmode_state">off</span></button>
-            </section>
+                    <button type="button" id="reset_game">Reset</button>
+                    <button type="button" id="reset_name">Rename</button>
+                    <button type="button" id="toggle_darkmode">Darkmode: <span id="darmode_state">off</span></button>
+                </section>
 
-            <!-- PURCHASED UPGRADES SECTION -->
-            <section id="pu_section" class="game__panel">
-                <h1 id="pu__heading">Purchased Upgrades</h1>
-                <p>Hello</p>
+                <!-- PURCHASED UPGRADES SECTION -->
+                <section id="pu_section" class="game__panel">
+                    <h1 id="pu__heading">Purchased Upgrades</h1>
+                    <p>Hello</p>
 
-            </section>
+                </section>
+
+                <section id="events_section" class="game__panel">
+                    <h1>Events</h1>
+                    <div id="events_list">
+
+                    </div>
+                </section>
+
             </div>
         </main>
 

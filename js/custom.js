@@ -202,6 +202,8 @@ const empireNameDisplay = document.getElementById("title__name");
 const emperorNameDisplay = document.getElementById("emperor__name");
 const darkModeDisplay = document.getElementById("darmode_state");
 
+const eventsListDisplay = document.getElementById("events_list");
+
 const cookiePolicyDisplay = document.getElementById("cookie_detail");
 
 // STYLESHEETS
@@ -338,8 +340,8 @@ function updateTotalsDisplay(){
 function updateProductivityDisplay(){
     // THIS CALCULATION IS DONE A FEW TIMES - CAN BE CONDENSED
     foodIncrementDisplay.textContent = beautifyNumber(farmer.productivity() - (worker.summary() * worker.hunger), 1, false);
-    woodIncrementDisplay.textContent = lumberjack.productivity();
-    stoneIncrementDisplay.textContent = miner.productivity();
+    woodIncrementDisplay.textContent = beautifyNumber(lumberjack.productivity(), 1, false);
+    stoneIncrementDisplay.textContent = beautifyNumber(miner.productivity(), 1, false);
 
     if(farmer.productivity() - (worker.summary() * worker.hunger)>= 0){
         foodIncrementDisplay.classList.remove("property__increment--negative");
@@ -1029,21 +1031,50 @@ function intervalCode(){
     updateDisplay();
 }
 
+// FUNCTION TO ADD A MESSAGE TO THE EVENT LOG
+function logEvent(message, messageLevel = "low"){
+    console.log(message);
+
+    const newMessage = document.createElement("p");
+
+    // IF THE EVENT IS A SERIOUS ONE
+    if(messageLevel = "high"){
+        newMessage.innerHTML = "<strong>" + message + "</strong>";
+    }
+    else{
+        newMessage.innerHTML = message;
+    }
+    eventsListDisplay.appendChild(newMessage);
+
+}
+
 // TODO - MAKE THIS PARAMETER DRIVEN
 // THIS FUNCTION REDUCES THE POPULATION BY 1
-function culling(){
+function culling(type){
+    let reason;
 
-    if(miner.total > 0){
+    switch(type){
+        case "hunger":
+            reason = "starved to death";
+            break;
+    }
+    console.log(reason);
+
+    if(worker.total > 0){
+        worker.total--;
+        logEvent("A worker " + reason);
+    }
+    else if(miner.total > 0){
         miner.total--;
+        logEvent("A miner " + reason);
     }
     else if(lumberjack.total > 0){
         lumberjack.total--;
+        logEvent("A lumberjack " + reason);
     }
     else if(farmer.total > 0){
         farmer.total--;
-    }
-    else if(worker.total > 0){
-        worker.total--;
+        logEvent("A farmer " + reason);
     }
     else{
         console.log("Nothing to cull");
@@ -1081,7 +1112,7 @@ function harvest(){
         // FOOD LEVELS SHOULD NOT DROP BELOW 0;
         food.total = 0;
 
-        culling();
+        culling("hunger");
     }
 
 
