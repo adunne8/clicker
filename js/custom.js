@@ -119,6 +119,9 @@ class Building{
 
         this.total += num;
     }
+    housingSummary(){
+        return (woodHovel.workerStorage * woodHovel.total);
+    }
 }
 
 
@@ -135,9 +138,11 @@ let miner;
 
 // INITIALISE BUILDINGS
 
+let building;
 let barn;
 let lumberyard;
 let stoneyard;
+let woodHovel;
 
 
 
@@ -164,6 +169,7 @@ const newMinerButton = document.getElementById("worker__miner");
 const newBarnButton = document.getElementById("build_barn");
 const newLumberyardButton = document.getElementById("build_lumberyard");
 const newStoneyardButton = document.getElementById("build_stoneyard");
+const newWoodHovelButton = document.getElementById("build_woodhovel");
 
 const upgradeButtons = document.querySelectorAll(".upgrade__button");
 
@@ -195,6 +201,8 @@ const minerDisplay = document.getElementById("miner__count");
 const barnDisplay = document.getElementById("barn__count");
 const lumberyardDisplay = document.getElementById("lumberyard__count");
 const stoneyardDisplay = document.getElementById("stoneyard__count");
+
+const woodHovelDisplay = document.getElementById("woodhovel__count")
 
 const purchasedUpgradeList = document.getElementById("pu_section");
 
@@ -240,6 +248,8 @@ function initializeValues(){
     stoneyard = new Building("Stoneyard", 0, 80, 20);
     */
 
+
+    // WE USE TOTAL = 1 HERE TO SET THE INITIAL TOTALS AT THE START OF THE GAME
     let barnParams = {
         name: "Barn",
         foodCost: 0,
@@ -264,9 +274,23 @@ function initializeValues(){
         stoneStorage: 200,
         total: 1
     };
+    let woodHovelParms = {
+        name: "Wood Hovel",
+        foodCost: 0,
+        woodCost: 20,
+        stoneCost: 0,
+        workerStorage: 5,
+        total: 1
+    }
+
+    // USED FOR ACCESSING BUILDING CLASS FUNCTIONS
+    building = new Building("building", 0, 0, 0);
+    
+
     barn = new Building(barnParams);
     lumberyard = new Building(lumberyardParams);
     stoneyard = new Building(stoneyardParms);
+    woodHovel = new Building(woodHovelParms);
 
 
 
@@ -332,6 +356,8 @@ function updateTotalsDisplay(){
     barnDisplay.textContent = barn.total;
     lumberyardDisplay.textContent = lumberyard.total;
     stoneyardDisplay.textContent = stoneyard.total;
+
+    woodHovelDisplay.textContent = woodHovel.total;
 
 
 }
@@ -589,19 +615,24 @@ function upgrade(upgradeButton){
 
 // WORKKER FUNCTIONS
 function newWorker(num){
-
-    if(food.total >= worker.cost*num){
-        worker.total = worker.total + num;
-        food.total = food.total - worker.cost*num;
+    // CHECK IF WE HAVE THE FOOD TO MAKE A WORKER
+    if(food.total < worker.cost*num){
+        console.log("cannot add worker, not enough food: " + food.total + " for worker cost: " + worker.cost*num);
+    }
+    // CHECK IF WE HAVE THE HOUSING FOR A WORKER
+    else if(worker.summary() + num > building.housingSummary()){
+        console.log("cannot add worker, not enough housing");
     }
     else{
-        console.log("cannot add worker, not enough food: " + food.total + " for worker cost: " + worker.cost*num);
+        worker.total = worker.total + num;
+        food.total = food.total - worker.cost*num;
     }
     saveData();
     updateDisplay();
 
 };
 function assignWorker(job, num){
+    // CHECK WE HAVE SPARE WORKERS TO ASSIGN 
     if (worker.total >= num){
         if(job === farmer.name){
             farmer.total = farmer.total + num;
@@ -621,6 +652,8 @@ function assignWorker(job, num){
         updateDisplay();
     }
 }
+
+
 
 /************** BUILDINGS **************/
 
@@ -709,7 +742,8 @@ function saveData(){
     let buildingData = {
         barn:barn,
         lumberyard:lumberyard,
-        stoneyard:stoneyard
+        stoneyard:stoneyard,
+        woodHovel:woodHovel
     }
 
     let genericData = {
@@ -871,6 +905,7 @@ function loadData(){
             barn.total = convertedBuildingData.barn.total;
             lumberyard.total = convertedBuildingData.lumberyard.total;
             stoneyard.total = convertedBuildingData.stoneyard.total;
+            woodHovel.total = convertedBuildingData.woodHovel.total;
         }
         else{
             console.warn("No localstorage for buildings found");
@@ -943,7 +978,9 @@ newLumberyardButton.addEventListener("click", function(){
 newStoneyardButton.addEventListener("click", function(){
     newBuilding(stoneyard, 1);
 });
-
+newWoodHovelButton.addEventListener("click", function(){
+    newBuilding(woodHovel, 1)
+})
 
 // UPGRADES
 upgradeButtons.forEach(function(currentButton){
