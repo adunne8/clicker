@@ -119,6 +119,9 @@ class Building{
 
         this.total += num;
     }
+    housingSummary(){
+        return (woodHovel.workerStorage * woodHovel.total);
+    }
 }
 
 
@@ -135,6 +138,7 @@ let miner;
 
 // INITIALISE BUILDINGS
 
+let building;
 let barn;
 let lumberyard;
 let stoneyard;
@@ -279,7 +283,9 @@ function initializeValues(){
         total: 1
     }
 
-
+    // USED FOR ACCESSING BUILDING CLASS FUNCTIONS
+    building = new Building("building", 0, 0, 0);
+    
 
     barn = new Building(barnParams);
     lumberyard = new Building(lumberyardParams);
@@ -614,7 +620,7 @@ function newWorker(num){
         console.log("cannot add worker, not enough food: " + food.total + " for worker cost: " + worker.cost*num);
     }
     // CHECK IF WE HAVE THE HOUSING FOR A WORKER
-    else if(worker.summary() + num > woodHovel.workerStorage * woodHovel.total){
+    else if(worker.summary() + num > building.housingSummary()){
         console.log("cannot add worker, not enough housing");
     }
     else{
@@ -739,7 +745,6 @@ function saveData(){
         stoneyard:stoneyard,
         woodHovel:woodHovel
     }
-    console.log(woodHovel);
 
     let genericData = {
         empireName:empireName,
