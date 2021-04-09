@@ -609,12 +609,12 @@ function upgrade(upgradeButton){
 
 // WORKKER FUNCTIONS
 function newWorker(num){
-    // CHECK IF WE HAVE THE FOODTO MAKE A WORKER
+    // CHECK IF WE HAVE THE FOOD TO MAKE A WORKER
     if(food.total < worker.cost*num){
         console.log("cannot add worker, not enough food: " + food.total + " for worker cost: " + worker.cost*num);
     }
     // CHECK IF WE HAVE THE HOUSING FOR A WORKER
-    else if(worker.summary() + num > 10){
+    else if(worker.summary() + num > woodHovel.workerStorage * woodHovel.total){
         console.log("cannot add worker, not enough housing");
     }
     else{
@@ -736,8 +736,10 @@ function saveData(){
     let buildingData = {
         barn:barn,
         lumberyard:lumberyard,
-        stoneyard:stoneyard
+        stoneyard:stoneyard,
+        woodHovel:woodHovel
     }
+    console.log(woodHovel);
 
     let genericData = {
         empireName:empireName,
@@ -898,6 +900,7 @@ function loadData(){
             barn.total = convertedBuildingData.barn.total;
             lumberyard.total = convertedBuildingData.lumberyard.total;
             stoneyard.total = convertedBuildingData.stoneyard.total;
+            woodHovel.total = convertedBuildingData.woodHovel.total;
         }
         else{
             console.warn("No localstorage for buildings found");
