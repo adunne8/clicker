@@ -189,6 +189,10 @@ const foodMaxDisplay = document.getElementById("food__max");
 const woodMaxDisplay = document.getElementById("wood__max");
 const stoneMaxDisplay = document.getElementById("stone__max");
 
+const populationTotalDisplay = document.getElementById("population_total_display");
+const housingTotalDisplay = document.getElementById("housing_total_display");
+
+
 const foodIncrementDisplay = document.getElementById("food__increment");
 const woodIncrementDisplay = document.getElementById("wood__increment");
 const stoneIncrementDisplay = document.getElementById("stone__increment");
@@ -462,6 +466,20 @@ function updatePopulationDisplay(){
         newFarmerButton.disabled = true;
         newLumberjackButton.disabled = true;
         newMinerButton.disabled = true;
+    }
+
+    populationTotalDisplay.textContent = worker.summary();
+    housingTotalDisplay.textContent = building.housingSummary();
+
+    if(worker.summary() >= building.housingSummary()){
+        populationTotalDisplay.classList.add("warning");
+    }
+    else if(worker.summary() >= ((building.housingSummary() / 100) * 90)){
+        populationTotalDisplay.classList.add("caution");
+    }
+    else{
+        populationTotalDisplay.classList.remove("caution");
+        populationTotalDisplay.classList.remove("warning");
     }
 
 
