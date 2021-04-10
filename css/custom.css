@@ -79,6 +79,12 @@ article{
 .property__increment--negative{
     color: red;
 }
+.caution{
+    color: orange;
+}
+.warning{
+    color: red;
+}
 
 
 button {
