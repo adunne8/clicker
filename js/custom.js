@@ -505,6 +505,7 @@ function updatePopulationDisplay(){
 function updateBuildingsDisplay(){
 
     // TODO - CAN THESE BE PUT INTO A LOOP?
+    
     if(barn.canPurchaseBuilding(1)){
         newBarnButton.disabled = false;
     }
@@ -529,11 +530,19 @@ function updateBuildingsDisplay(){
     else{
         newWoodHovelButton.disabled = true;
     }
+    /*
+    arrBuildings.forEach(function(buildingInstance){
+        console.log(buildingInstance);
 
-    arrBuildings.forEach(function(arrBuildingInstance){
-        console.log(arrBuildingInstance);
+        if(buildingInstance.canPurchaseBuilding(1)){
+            buildingInstance.disabled = false;
+        }
+        else{
+            buildingInstance.disabled = true;
+        }
+
     });
-    
+    */
 
     
 }
