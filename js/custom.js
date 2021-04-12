@@ -103,13 +103,19 @@ class Building{
         this.foodStorage = definition.foodStorage,
         this.woodStorage = definition.woodStorage,
         this.stoneStorage = definition.stoneStorage,
-        this.workerStorage = definition.workerStorage
+        this.workerStorage = definition.workerStorage,
+        // WANT TO ADD EACH INSTANCE OF A BUILDING INTO AN ARRAY
+        arrBuildings.push(this);
     }
 
     canPurchaseBuilding(num){
+        //console.log(this.foodCost + " " + food.total  + " " +  this.woodCost  + " " +  wood.total  + " " +  this.stoneCost  + " " +  stone.total)
+
         if((this.foodCost * num) <= food.total && (this.woodCost * num) <= wood.total && (this.stoneCost * num) <= stone.total){
-            console.log(this.foodCost + " " + food.total  + " " +  this.woodCost  + " " +  wood.total  + " " +  this.stoneCost  + " " +  stone.total)
             return true;
+        }
+        else{
+            return false;
         }
     }
     purchaseBuilding(num){
@@ -144,6 +150,7 @@ let lumberyard;
 let stoneyard;
 let woodHovel;
 
+let arrBuildings = [];
 
 
 
@@ -339,6 +346,7 @@ function updateDisplay(){
     updatePopulationDisplay();
     updateUpgradesDisplay();
     updateProductivityDisplay();
+    updateBuildingsDisplay();
 
 }
 // THIS UPDATES THE TOTAL NUMBER OF RESOURCES/WORKERS ETC ON THE SCREEN
@@ -363,6 +371,9 @@ function updateTotalsDisplay(){
 
     woodHovelDisplay.textContent = woodHovel.total;
 
+    
+    populationTotalDisplay.textContent = worker.summary();
+    housingTotalDisplay.textContent = building.housingSummary();
 
 }
 
@@ -403,7 +414,7 @@ function updateProductivityDisplay(){
 
 
 // THIS FUNCTION WILL CHECK HOW AN UPGRADE BUTTON SHOULD BE DISPLAYED
-// IS IT ACTIVE: HIDDEN
+// IS IT ACTIVE/PURCHASED: HIDDEN
 // IS IT NOT AFFORDABLE: DISABLED
 // CAN IT BE PURCAHSED: ENABLED
 function updateUpgradesDisplay(){
@@ -450,13 +461,19 @@ function updateUpgradesDisplay(){
 // THIS FUNCTION WILL CHECK IF THE WORKERS BUTTONS SHOULD BE ENABLED OR NOT
 function updatePopulationDisplay(){
 
-    if(food.total >= worker.cost){
+    // REDUCE CALLS TO CLASS FUNCTION
+    const workerSummary = worker.summary();
+    const housingSummary = building.housingSummary();
+
+    // CAN WE MAKE A NEW WORKER
+    if(food.total >= worker.cost && housingSummary > workerSummary ){
         newWorkerButton.disabled = false;
     }
     else{
         newWorkerButton.disabled = true;
     }
 
+    // CAN WE ASSIGN A WORKER
     if(worker.total > 0){
         newFarmerButton.disabled = false;
         newLumberjackButton.disabled = false;
@@ -468,13 +485,12 @@ function updatePopulationDisplay(){
         newMinerButton.disabled = true;
     }
 
-    populationTotalDisplay.textContent = worker.summary();
-    housingTotalDisplay.textContent = building.housingSummary();
 
-    if(worker.summary() >= building.housingSummary()){
+    // DO WE NEED TO ADD A WARNING CAUTION LABEL FOR APPROACHING POPULATION LIMIT
+    if(workerSummary >= housingSummary){
         populationTotalDisplay.classList.add("warning");
     }
-    else if(worker.summary() >= ((building.housingSummary() / 100) * 90)){
+    else if(workerSummary >= ((housingSummary / 100) * 90)){
         populationTotalDisplay.classList.add("caution");
     }
     else{
@@ -485,8 +501,49 @@ function updatePopulationDisplay(){
 
 }
 
-
+// THIS FUNCTION DECIDES IF ABUILDING BUTTON IS ENABLED OR NOT BASED ON AVAILABLE RESOURCES
 function updateBuildingsDisplay(){
+
+    // TODO - CAN THESE BE PUT INTO A LOOP?
+    
+    if(barn.canPurchaseBuilding(1)){
+        newBarnButton.disabled = false;
+    }
+    else{
+        newBarnButton.disabled = true;
+    }
+    if(lumberyard.canPurchaseBuilding(1)){
+        newLumberyardButton.disabled = false;
+    }
+    else{
+        newLumberyardButton.disabled = true;
+    }
+    if(stoneyard.canPurchaseBuilding(1)){
+        newStoneyardButton.disabled = false;
+    }
+    else{
+        newStoneyardButton.disabled = true;
+    }
+    if(woodHovel.canPurchaseBuilding(1)){
+        newWoodHovelButton.disabled = false;
+    }
+    else{
+        newWoodHovelButton.disabled = true;
+    }
+    /*
+    arrBuildings.forEach(function(buildingInstance){
+        console.log(buildingInstance);
+
+        if(buildingInstance.canPurchaseBuilding(1)){
+            buildingInstance.disabled = false;
+        }
+        else{
+            buildingInstance.disabled = true;
+        }
+
+    });
+    */
+
     
 }
 
@@ -515,6 +572,9 @@ function updatePurchasedUpgradesDisplay(upgradeList){
 
 }
 
+
+/************** SYSTEM MANAGEMENT **************/
+ 
 function setCustomItems(convertedGenericData){
 
     if(convertedGenericData){
@@ -987,6 +1047,7 @@ newMinerButton.addEventListener("click", function(){
 });
 
 // BUILDINGS
+// TODO MERGE ASSIGNMENTS LIKE UPGRADE BUTTONS
 newBarnButton.addEventListener("click", function(){
     newBuilding(barn, 1);
 });
@@ -998,7 +1059,7 @@ newStoneyardButton.addEventListener("click", function(){
 });
 newWoodHovelButton.addEventListener("click", function(){
     newBuilding(woodHovel, 1)
-})
+});
 
 // UPGRADES
 upgradeButtons.forEach(function(currentButton){
