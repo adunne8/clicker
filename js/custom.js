@@ -75,6 +75,21 @@ class Upgrade{
         }
 
     }
+
+    canPurchaseUpgrade(){
+        if((this.foodCost <= food.total) && (this.woodCost <= wood.total) && (this.stoneCost <= stone.total)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    outputCost(){
+        console.log(this.foodCost + " " + this.woodCost + " " + this.stoneCost);
+    }
+
+
     
 
 }
@@ -423,7 +438,7 @@ function updateUpgradesDisplay(){
     }
     else{
         doubleClickFoodButton.hidden = false;
-        if(upgradePurchaseCheck(doubleClickFood)){
+        if(doubleClickFood.canPurchaseUpgrade()){
             doubleClickFoodButton.disabled = false;
         }
         else{
@@ -435,7 +450,7 @@ function updateUpgradesDisplay(){
     }
     else{
         doubleClickWoodButton.hidden = false;
-        if(upgradePurchaseCheck(doubleClickWood)){
+        if(doubleClickWood.canPurchaseUpgrade()){
             doubleClickWoodButton.disabled = false;
         }
         else{
@@ -447,7 +462,7 @@ function updateUpgradesDisplay(){
     }
     else{
         doubleClickStoneButton.hidden = false;
-        if(upgradePurchaseCheck(doubleClickStone)){
+        if(doubleClickStone.canPurchaseUpgrade()){
             doubleClickStoneButton.disabled = false;
         }
         else{
@@ -640,35 +655,24 @@ function toggleCookiePolicy(){
 
 /************** UPGRADES **************/
 
-// THIS CHECKS IF A SPECIFIC UPGRADE CAN BE PURCHASED
-function upgradePurchaseCheck(selectedUpgrade){
-    // compare resource totals vs upgrade totals
-
-    if(selectedUpgrade.foodCost <= food.total 
-        && selectedUpgrade.woodCost <= wood.total
-        && selectedUpgrade.stoneCost <= stone.total){
-            return true;
-    }
-    return false;
-}
 
 
 // UPGRADES PROCESSOR FUNCTION
 // CHECKS THE TYPE OF UPGRADE AND WHETHER IT CAN BE PURCHASED WITH THE GIVEN RESOURCES
 function upgrade(upgradeButton){
     
-    if(upgradeButton.id === 'doubleclick--food' && upgradePurchaseCheck(doubleClickFood)){
+    if(upgradeButton.id === 'doubleclick--food' && doubleClickFood.canPurchaseUpgrade()){
         food.clickValue = food.clickValue*2;
         doubleClickFood.active = true;
         food.total = food.total - doubleClickFood.foodCost;
     }    
-    else if(upgradeButton.id === 'doubleclick--wood' && upgradePurchaseCheck(doubleClickWood)){
+    else if(upgradeButton.id === 'doubleclick--wood' && doubleClickWood.canPurchaseUpgrade()){
 
         wood.clickValue = wood.clickValue*2;
         doubleClickWood.active = true;
         wood.total = wood.total - doubleClickWood.woodCost;
     }
-    else if(upgradeButton.id === 'doubleclick--stone' && upgradePurchaseCheck(doubleClickStone)){
+    else if(upgradeButton.id === 'doubleclick--stone' && doubleClickStone.canPurchaseUpgrade()){
         stone.clickValue = stone.clickValue*2;
         doubleClickStone.active = true;
         stone.total = stone.total - doubleClickStone.stoneCost;
