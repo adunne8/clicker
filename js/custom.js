@@ -57,6 +57,9 @@ class Worker {
 
 // TO BE INVESTIGATED IN THE FUTURE FOR UPGRADE PROCESSING
 class Upgrade{
+
+    
+
     constructor(name, label, description, active, foodCost = 0, woodCost = 0, stoneCost = 0){
         this.name = name,
         this.label = label,
@@ -64,7 +67,8 @@ class Upgrade{
         this.active = active,
         this.foodCost = foodCost,
         this.woodCost = woodCost,
-        this.stoneCost = stoneCost
+        this.stoneCost = stoneCost,
+        Upgrade.allInstances.push(this)
     }
 
     //LISTS OUT ALL PROPERTIES+VALUES OF THE CLASS
@@ -90,9 +94,13 @@ class Upgrade{
     }
 
 
+
     
 
 }
+
+
+
 /*
 class Building{
     constructor(name, total, foodCost, woodCost, stoneCost, foodStorage, woodStorage, stoneStorage){
@@ -120,7 +128,7 @@ class Building{
         this.stoneStorage = definition.stoneStorage,
         this.workerStorage = definition.workerStorage,
         // WANT TO ADD EACH INSTANCE OF A BUILDING INTO AN ARRAY
-        arrBuildings.push(this);
+        Building.allInstances.push(this);
     }
 
     canPurchaseBuilding(num){
@@ -144,6 +152,10 @@ class Building{
         return (woodHovel.workerStorage * woodHovel.total);
     }
 }
+
+
+Upgrade.allInstances = [];
+Building.allInstances = [];
 
 
 // INITIALISE UPGRADES
@@ -265,14 +277,11 @@ function initializeValues(){
     });
     */
 
+    // TODO SET THESE TO PARAMETERS 
     doubleClickFood = new Upgrade("doubleClickFood", "Double Food per Click", "Each click generates twice as much food", false, 100, 0, 0);
     doubleClickWood = new Upgrade("doubleClickWood", "Double Wood per Click", "Each click generates twice as much wood", false, 0, 100, 0);
     doubleClickStone = new Upgrade("doubleClickStone", "Double Stone per Click", "Each click generates twice as much stone", false, 0, 0, 100);
-    /*
-    barn = new Building("Barn", 0, 80, 20);
-    lumberyard = new Building("Lumberyard", 0, 80, 20);
-    stoneyard = new Building("Stoneyard", 0, 80, 20);
-    */
+    
 
 
     // WE USE TOTAL = 1 HERE TO SET THE INITIAL TOTALS AT THE START OF THE GAME
@@ -545,19 +554,7 @@ function updateBuildingsDisplay(){
     else{
         newWoodHovelButton.disabled = true;
     }
-    /*
-    arrBuildings.forEach(function(buildingInstance){
-        console.log(buildingInstance);
-
-        if(buildingInstance.canPurchaseBuilding(1)){
-            buildingInstance.disabled = false;
-        }
-        else{
-            buildingInstance.disabled = true;
-        }
-
-    });
-    */
+    
 
     
 }
