@@ -60,14 +60,14 @@ class Upgrade{
 
     
 
-    constructor(name, label, description, active, foodCost = 0, woodCost = 0, stoneCost = 0){
-        this.name = name,
-        this.label = label,
-        this.description = description,
-        this.active = active,
-        this.foodCost = foodCost,
-        this.woodCost = woodCost,
-        this.stoneCost = stoneCost,
+    constructor(definition){
+        this.name = definition.name,
+        this.label = definition.label,
+        this.description = definition.description,
+        this.active = definition.active,
+        this.foodCost = definition.foodCost,
+        this.woodCost = definition.woodCost,
+        this.stoneCost = definition.stoneCost,
         Upgrade.allInstances.push(this)
     }
 
@@ -179,6 +179,15 @@ let woodHovel;
 
 let arrBuildings = [];
 
+// GO THROUGH THE LIST OF ITEMS AND CREATE THEIR BUTTONS
+createButtons();
+
+function createButtons(){
+    console.log(Upgrade.allInstances.length);
+}
+
+
+
 
 
 
@@ -277,10 +286,38 @@ function initializeValues(){
     });
     */
 
+    let doubleClickFoodParms = {
+        name: "doubleClickFood", 
+        label: "Double Food per Click",
+        description: "Each click generates twice as much food",
+        active: false,
+        foodCost: 100,
+        woodCost: 0,
+        stoneCost: 0
+    }
+    let doubleClickWoodParms = {
+        name: "doubleClickWood", 
+        label: "Double Wood per Click",
+        description: "Each click generates twice as much wood",
+        active: false,
+        foodCost: 0,
+        woodCost: 100,
+        stoneCost: 0
+    }
+    let doubleClickStoneParms = {
+        name: "doubleClickStone", 
+        label: "Double Stone per Click",
+        description: "Each click generates twice as much stone",
+        active: false,
+        foodCost: 0,
+        woodCost: 0,
+        stoneCost: 100
+    }
+
     // TODO SET THESE TO PARAMETERS 
-    doubleClickFood = new Upgrade("doubleClickFood", "Double Food per Click", "Each click generates twice as much food", false, 100, 0, 0);
-    doubleClickWood = new Upgrade("doubleClickWood", "Double Wood per Click", "Each click generates twice as much wood", false, 0, 100, 0);
-    doubleClickStone = new Upgrade("doubleClickStone", "Double Stone per Click", "Each click generates twice as much stone", false, 0, 0, 100);
+    doubleClickFood = new Upgrade(doubleClickFoodParms);
+    doubleClickWood = new Upgrade(doubleClickWoodParms);
+    doubleClickStone = new Upgrade(doubleClickStoneParms);
     
 
 
